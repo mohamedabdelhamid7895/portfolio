@@ -1,0 +1,1214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Mohamed Abdel Hamid</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Frontend engineer in Cairo building fast, accessible web apps with React and TypeScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one lit stage in two themes. A live dot field behind a kinetic name,
+   a bento of results, a featured side project with a real QR tag, a timeline
+   that fills, and a closing call to talk. Amber is the only accent.
+   Logical properties throughout so Arabic mirrors cleanly. */
+:root {
+  --bg: #f3f4f7;
+  --surface: #ffffff;
+  --surface-2: #e7e9ef;
+  --surface-3: #dcdfe7;
+  --ink: #0d0f14;
+  --muted: #464c5b;
+  --dim: #5d6474;
+  --accent: #ffb829;
+  --accent-ink: #1a1200;
+  --accent-text: #8a5200;
+  --ok: #157a42;
+  --dot: 70, 76, 91;
+  --dot-hot: 214, 140, 0;
+
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --text: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1280px;
+  --section: clamp(112px, 14vw, 200px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0b0f; --surface: #14171f; --surface-2: #1c202a; --surface-3: #262b37;
+    --ink: #eceef6; --muted: #a8acbc; --dim: #8e93a6;
+    --accent-text: #ffb829; --ok: #4ad38a;
+    --dot: 163, 167, 184; --dot-hot: 255, 184, 41;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0b0f; --surface: #14171f; --surface-2: #1c202a; --surface-3: #262b37;
+  --ink: #eceef6; --muted: #a8acbc; --dim: #8e93a6;
+  --accent-text: #ffb829; --ok: #4ad38a;
+  --dot: 163, 167, 184; --dot-hot: 255, 184, 41;
+  color-scheme: dark;
+}
+:root:lang(ar) {
+  --display: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --text: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 88px; }
+@media (prefers-reduced-motion: no-preference) { html:not(.paused) { scroll-behavior: smooth; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 18px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; caret-color: var(--accent-text);
+  overflow-x: clip;
+}
+::selection { background: var(--accent); color: var(--accent-ink); }
+a { color: inherit; text-underline-offset: 0.22em; }
+:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 700; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+:lang(de) h2, :lang(de) h3 { hyphens: auto; overflow-wrap: break-word; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.wrap {
+  max-width: calc(var(--max) + 2 * var(--gutter)); margin-inline: auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+[dir="rtl"] .flip { transform: scaleX(-1); }
+
+/* Theme switch: circular reveal from the button */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+/* ---------- Skip link + progress ---------- */
+.skip {
+  position: fixed; z-index: 100; inset-inline-start: max(16px, env(safe-area-inset-left, 0px)); top: calc(12px + env(safe-area-inset-top, 0px));
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; padding: 12px 18px; border-radius: 999px; text-decoration: none;
+  transform: translateY(-160%); transition: transform 200ms var(--ease-out);
+}
+.skip:focus { transform: none; }
+.progress { position: fixed; inset: 0 0 auto; height: 3px; z-index: 60; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+[dir="rtl"] .progress { transform-origin: 100% 50%; }
+@supports (animation-timeline: scroll()) { .progress { animation: progress linear both; animation-timeline: scroll(root); } }
+@keyframes progress { to { transform: scaleX(1); } }
+
+.cursor {
+  position: fixed; left: 0; top: 0; z-index: 90; width: 36px; height: 36px; margin: -18px 0 0 -18px; pointer-events: none;
+  border: 2px solid var(--accent-text); border-radius: 50%; opacity: 0.8;
+  transform: translate3d(-100px, -100px, 0);
+  transition: width 220ms var(--ease-out), height 220ms var(--ease-out), margin 220ms var(--ease-out), background-color 220ms ease, border-color 220ms ease;
+}
+.cursor.is-hover { width: 60px; height: 60px; margin: -30px 0 0 -30px; background: rgba(255, 184, 41, 0.2); border-color: transparent; }
+.cursor.is-down { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+@media not all and (hover: hover) and (pointer: fine) { .cursor { display: none; } }
+.paused .cursor { display: none; }
+
+/* A soft light that follows the pointer over every section */
+.glow {
+  position: fixed; left: 0; top: 0; z-index: 40; width: 620px; height: 620px; margin: -310px 0 0 -310px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(circle closest-side, rgba(255, 184, 41, 0.18), rgba(255, 184, 41, 0.06) 55%, rgba(255, 184, 41, 0)); /* taste-skill-ignore: cursor light the owner asked for */
+  transform: translate3d(-1000px, -1000px, 0); opacity: 0; transition: opacity 400ms ease;
+}
+.glow.on { opacity: 1; }
+@media not all and (hover: hover) and (pointer: fine) { .glow { display: none; } }
+.paused .glow { display: none; }
+
+/* ---------- Nav ---------- */
+.nav-bar { position: fixed; inset: 0 0 auto; z-index: 50; padding-top: env(safe-area-inset-top, 0px); transition: transform 320ms var(--ease-drawer), background-color 240ms ease; }
+.nav-bar.is-solid { background: var(--bg); }
+.nav-bar.is-hidden:not(:focus-within) { transform: translateY(-110%); }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 72px; }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.03em; text-decoration: none; }
+:lang(ar) .wordmark { letter-spacing: 0; }
+.wordmark .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 15px; letter-spacing: -0.04em; }
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-links a { display: block; padding: 10px 14px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 160ms ease, background-color 160ms ease; }
+.nav-links a[aria-current="true"] { color: var(--ink); background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .nav-links a:hover { color: var(--ink); } }
+.nav-tools { display: flex; align-items: center; gap: 6px; }
+.icon-btn, .pill-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; min-width: 44px; padding: 0 14px; border-radius: 999px;
+  border: 0; background: var(--surface-2); color: var(--ink); font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+.icon-btn { padding: 0; }
+.icon-btn:active, .pill-btn:active { transform: scale(0.96); }
+.icon-btn svg, .pill-btn svg { width: 18px; height: 18px; }
+@media (hover: hover) and (pointer: fine) { .icon-btn:hover, .pill-btn:hover { background: var(--surface-3); } }
+.pill-btn.solid { background: var(--ink); color: var(--bg); }
+@media (hover: hover) and (pointer: fine) { .pill-btn.solid:hover { background: var(--ink); opacity: 0.88; } }
+.theme-btn .sun, :root[data-resolved="dark"] .theme-btn .moon { display: none; }
+:root[data-resolved="dark"] .theme-btn .sun { display: block; }
+.motion-btn .on, .paused .motion-btn .off { display: none; }
+.paused .motion-btn .on { display: block; }
+.lang { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--surface-2); }
+.lang button { border: 0; background: transparent; min-height: 38px; min-width: 40px; padding: 0 10px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; transition: background-color 200ms ease, color 200ms ease; }
+.lang button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }
+.lang button[lang="ar"] { font-family: "IBM Plex Sans Arabic", sans-serif; }
+.menu-btn { display: none; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+
+@media (max-width: 1180px) {
+  .nav-links { display: none; position: absolute; inset-inline: max(var(--gutter), env(safe-area-inset-left, 0px)); top: calc(76px + env(safe-area-inset-top, 0px)); flex-direction: column; align-items: stretch; gap: 4px; padding: 8px; border-radius: 20px; background: var(--surface); box-shadow: 0 24px 60px rgba(0,0,0,.25); } /* taste-skill-ignore: open menu floats */
+  .nav-links.is-open { display: flex; animation: menu-in 200ms var(--ease-out); transform-origin: top; }
+  .nav-links a { font-size: 18px; padding: 14px 16px; border-radius: 14px; }
+  .menu-btn { display: inline-flex; }
+  .hire { display: none; }
+}
+@media (max-width: 560px) {
+  .wordmark > span:last-child { display: none; }
+  .motion-btn { display: none; }
+}
+@keyframes menu-in { from { opacity: 0; transform: scale(0.97) translateY(-6px); } }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; min-height: min(100svh, 980px); display: grid; align-items: end; padding-top: calc(120px + env(safe-area-inset-top, 0px)); padding-bottom: clamp(48px, 7vw, 96px); isolation: isolate; }
+.field { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; }
+.hero-inner { display: grid; gap: clamp(28px, 4vw, 48px); }
+.hero-status { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: var(--muted); }
+.hero h1 { font-size: clamp(3.25rem, 0.6rem + 11.2vw, 11rem); line-height: 0.86; letter-spacing: -0.055em; font-weight: 800; }
+:lang(ar) .hero h1 { letter-spacing: 0; line-height: 1.15; font-size: clamp(3rem, 0.6rem + 10vw, 9.5rem); }
+.hero h1 .line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.hero h1 .ch { display: inline-block; white-space: pre; }
+.hero h1 .dot { color: var(--accent); }
+.hero-foot { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px 48px; align-items: end; }
+.lede { font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem); line-height: 1.45; max-width: 36ch; }
+.roller { display: inline-grid; vertical-align: bottom; height: 1.45em; overflow: hidden; color: var(--accent-text); font-weight: 600; }
+.roller span { grid-area: 1 / 1; white-space: nowrap; transition: transform 600ms var(--ease-in-out), opacity 400ms ease; }
+.roller span[data-state="next"] { transform: translateY(100%); opacity: 0; }
+.roller span[data-state="prev"] { transform: translateY(-100%); opacity: 0; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-self: end; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 26px; border-radius: 999px; border: 0; font-size: 17px; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform 160ms var(--ease-out), background-color 200ms ease; }
+.btn:active { transform: scale(0.97); }
+.btn svg { width: 18px; height: 18px; transition: translate 240ms var(--ease-out); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-ghost { background: var(--surface-2); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: #ffc54f; }
+  .btn-ghost:hover { background: var(--surface-3); }
+  .btn:hover svg.flip-x { translate: 3px 0; }
+  [dir="rtl"] .btn:hover svg.flip-x { translate: -3px 0; }
+}
+.magnetic { transition: transform 400ms var(--ease-out), background-color 200ms ease; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 .ch { animation: rise-in 1000ms var(--ease-out) both; animation-delay: calc(120ms + var(--i) * 34ms); }
+  .hero-status, .hero-foot > * { animation: fade-up 900ms var(--ease-out) both; }
+  .hero-status { animation-delay: 60ms; }
+  .hero-foot > :nth-child(1) { animation-delay: 650ms; }
+  .hero-foot > :nth-child(2) { animation-delay: 760ms; }
+}
+@keyframes rise-in { from { transform: translateY(105%) rotate(5deg); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(20px); filter: blur(6px); } }
+
+/* ---------- Marquee (decorative; always laid out left to right) ---------- */
+.marquee { direction: ltr; padding-block: 32px; overflow: hidden; background: var(--surface); }
+.marquee-track { display: flex; width: max-content; }
+.marquee-track.rev { margin-top: 14px; transform: translateX(-30%); }
+/* Rows slide with the reader's scroll, never on their own */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.paused) .marquee-track { animation: drift linear both; animation-timeline: --mq; animation-range: cover 0% cover 100%; }
+    html:not(.paused) .marquee-track.rev { animation-name: drift-rev; }
+  }
+}
+.marquee { view-timeline-name: --mq; }
+.marquee-group { display: flex; gap: 12px; padding-right: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 18px; border-radius: 999px; background: var(--surface-2); font-size: 16px; color: var(--muted); font-family: "Hanken Grotesk", sans-serif; }
+.chip b { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.chip.hl { color: var(--ink); background: var(--surface-3); }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(-30%); } }
+@keyframes drift-rev { from { transform: translateX(-30%); } to { transform: translateX(0); } }
+
+/* ---------- Section heads ---------- */
+.section { padding-block: var(--section); }
+.head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: 24px 48px; align-items: end; margin-bottom: clamp(48px, 7vw, 96px); }
+.head h2 { font-size: clamp(2.75rem, 1rem + 5.6vw, 6.5rem); line-height: 0.92; letter-spacing: -0.045em; font-weight: 800; }
+:lang(ar) .head h2 { letter-spacing: 0; line-height: 1.15; }
+.head h2 .dim { color: var(--dim); }
+.head p { color: var(--muted); font-size: 19px; max-width: 46ch; }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.paused) .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    html:not(.paused) .reveal-2 { animation: reveal linear both; animation-timeline: view(); animation-range: entry 10% entry 80%; }
+    html:not(.paused) .head h2 { animation: wipe linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
+  }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(48px) scale(0.98); filter: blur(8px); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); } }
+@keyframes wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(40px); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); } to { clip-path: inset(0 0 -10% 0); } }
+
+/* ---------- Tiles ---------- */
+.tile { position: relative; overflow: hidden; border-radius: 28px; background: var(--surface); padding: clamp(24px, 3vw, 40px); display: grid; gap: 14px; align-content: space-between; }
+.tile h3 { font-family: var(--text); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
+.tile p { color: var(--muted); font-size: 16px; max-width: 40ch; }
+.tile .big-num { font-family: "Bricolage Grotesque", var(--display); font-weight: 800; font-size: clamp(3.5rem, 2rem + 4vw, 6rem); line-height: 0.95; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; color: var(--ink); display: flex; align-items: baseline; gap: 12px; max-width: none; direction: ltr; justify-content: flex-start; }
+[dir="rtl"] .tile .big-num { justify-content: flex-end; }
+.tile .big-num small { font-family: var(--text); font-size: 0.3em; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+.tile .big-num .from { color: var(--dim); font-size: 0.42em; letter-spacing: -0.02em; }
+
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.t-gauge { grid-column: span 5; grid-row: span 2; align-content: start; }
+.t-load { grid-column: span 7; }
+.t-seo { grid-column: span 4; }
+.t-cov { grid-column: span 3; }
+.gauge { width: min(100%, 300px); aspect-ratio: 1; margin: 8px auto 0; position: relative; }
+.gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge circle { fill: none; stroke-width: 10; }
+.gauge .track { stroke: var(--surface-2); }
+.gauge .was { stroke: var(--surface-3); stroke-linecap: round; }
+.gauge .now { stroke: var(--accent); stroke-linecap: round; }
+.gauge-label { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.gauge-label strong { display: block; font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: clamp(4rem, 3rem + 3vw, 6rem); line-height: 0.95; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+.gauge-label span { color: var(--muted); font-size: 15px; }
+.gauge-legend { display: flex; justify-content: center; gap: 20px; font-size: 14px; color: var(--muted); }
+.gauge-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.gauge-legend i { width: 10px; height: 10px; border-radius: 50%; }
+.speed { height: 12px; border-radius: 99px; background: var(--surface-2); overflow: hidden; position: relative; }
+.speed i { position: absolute; inset: 0; border-radius: inherit; background: var(--accent); transform-origin: left; }
+[dir="rtl"] .speed i { transform-origin: right; }
+.bars { display: flex; align-items: end; gap: 10px; height: 110px; direction: ltr; }
+.bars div { flex: 1; display: grid; gap: 6px; height: 100%; text-align: center; font-size: 14px; color: var(--muted); grid-template-rows: 1fr auto; }
+.bars i { display: block; border-radius: 10px 10px 4px 4px; background: var(--surface-3); height: calc(var(--v) * 1%); align-self: end; transform-origin: bottom; }
+.bars .now i { background: var(--accent); }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.paused) .speed i { animation: grow-x linear both; animation-timeline: view(); animation-range: entry 30% cover 50%; }
+    html:not(.paused) .bars i { animation: grow-y linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
+  }
+}
+@keyframes grow-x { from { transform: scaleX(0.05); } }
+@keyframes grow-y { from { transform: scaleY(0.1); } }
+
+/* Contributions */
+.contrib { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.contrib .tile { align-content: start; min-height: 240px; }
+.contrib .tile .big-num { font-size: clamp(3rem, 2rem + 2.6vw, 4.75rem); }
+.contrib .tile .big-num.word { font-family: var(--display); }
+:lang(ar) .contrib .tile .big-num.word { letter-spacing: 0; }
+.also { margin-top: 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.also .tile.ink { background: var(--ink); color: var(--bg); align-content: center; }
+.also .tile.ink p { color: var(--bg); font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem); line-height: 1.4; max-width: 34ch; font-family: var(--display); font-weight: 500; letter-spacing: -0.015em; }
+:lang(ar) .also .tile.ink p { letter-spacing: 0; }
+
+/* Persona tile */
+.persona-tile { align-content: start; }
+.personas { display: flex; flex-wrap: wrap; gap: 8px; }
+.persona { position: relative; border: 0; color: var(--ink); display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding-block: 6px; padding-inline: 6px 16px; border-radius: 999px; background: var(--surface-2); cursor: pointer; font-weight: 600; font-size: 15px; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out); }
+.persona:active { transform: scale(0.97); }
+.persona .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #0a0b0f; font-family: "Hanken Grotesk", sans-serif; }
+.persona[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+@media (hover: hover) and (pointer: fine) { .persona:not([aria-pressed="true"]):hover { background: var(--surface-3); } }
+.preview { display: grid; gap: 10px; padding: 20px; border-radius: 20px; background: var(--surface-2); }
+.preview-title { font-size: 14px; color: var(--muted); }
+.tile .preview-lede { font-size: 18px; color: var(--ink); font-weight: 500; }
+.facts { display: grid; gap: 8px; }
+.facts li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; font-size: 15px; color: var(--ink); }
+.facts svg { width: 18px; height: 18px; margin-top: 3px; color: var(--ok); }
+
+/* ---------- Project: La2eeto ---------- */
+.project { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.project-stage { position: relative; min-height: 560px; border-radius: 32px; background: #0f2433; overflow: hidden; isolation: isolate; color: #fdfcf9; display: flex; align-items: center; justify-content: center; gap: clamp(36px, 6vw, 88px); padding: 64px 24px; }
+.tag, .phone { flex: none; }
+.tag {
+  position: relative; width: 210px; padding: 18px; border-radius: 26px; background: #fdfcf9; color: #0f2433;
+  display: grid; gap: 12px; justify-items: center; rotate: -8deg; animation: bob 6s var(--ease-in-out) infinite alternate;
+}
+.tag .hole { width: 18px; height: 18px; border-radius: 50%; background: #0f2433; }
+.tag .qr { position: relative; width: 150px; height: 150px; }
+.tag .qr svg { width: 100%; height: 100%; display: block; }
+.tag .scan { position: absolute; inset-inline: -6px; top: 0; height: 3px; border-radius: 2px; background: #1fa99f; animation: scan 2.4s var(--ease-in-out) infinite alternate; }
+.tag p { font-weight: 700; font-size: 13px; text-align: center; line-height: 1.35; color: #0f2433; }
+.tag p span { display: block; font-family: "IBM Plex Sans Arabic", sans-serif; font-weight: 600; }
+@keyframes scan { to { transform: translateY(147px); } }
+@keyframes bob { to { transform: translateY(-14px); rotate: -5deg; } }
+.phone { position: relative; width: 270px; height: 470px; padding: 14px; border-radius: 42px; background: #071520; rotate: 6deg; animation: bob2 7s var(--ease-in-out) infinite alternate; }
+@keyframes bob2 { to { transform: translateY(-16px); rotate: 3deg; } }
+.screen { position: relative; height: 100%; border-radius: 30px; background: #fdfcf9; color: #22323f; overflow: hidden; }
+.screen-page { position: absolute; inset: 0; padding: 18px 16px; display: grid; gap: 12px; align-content: start; transition: opacity 500ms ease, filter 500ms ease, transform 600ms var(--ease-out); }
+.screen-page[data-show="false"] { opacity: 0; filter: blur(6px); transform: translateY(10px); }
+.screen-page[lang="ar"] { font-family: "IBM Plex Sans Arabic", sans-serif; }
+.lost { background: #d69a2d; color: #1f1300; font-weight: 700; font-size: 13px; padding: 8px 12px; border-radius: 12px; }
+.pet { height: 120px; border-radius: 18px; background: #ddf3ee; display: grid; place-items: center; }
+.pet svg { width: 84px; height: 84px; color: #0a6f69; }
+.screen h4 { margin: 0; font-size: 22px; font-weight: 800; color: #0f2433; font-family: "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
+.screen-page[lang="ar"] h4 { font-family: "IBM Plex Sans Arabic", sans-serif; letter-spacing: 0; }
+.screen p { font-size: 13.5px; line-height: 1.45; color: #22323f; }
+.screen .act { display: block; text-align: center; padding: 11px; border-radius: 14px; font-weight: 700; font-size: 14px; }
+.screen .act.primary { background: #0a6f69; color: #fff; }
+.screen .act.soft { background: #f2efe6; color: #0f2433; }
+.demo-chip { position: absolute; inset-inline-end: 20px; top: 20px; z-index: 2; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: #1d3a4e; color: #fdfcf9; }
+.project-text { display: grid; gap: 24px; align-content: space-between; }
+.project-text h3 { font-family: var(--display); font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem); line-height: 1.08; letter-spacing: -0.035em; font-weight: 800; }
+:lang(ar) .project-text h3 { letter-spacing: 0; line-height: 1.35; }
+.feats { display: grid; gap: 12px; }
+.feats li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; color: var(--ink); font-size: 16px; }
+.feats svg { width: 20px; height: 20px; margin-top: 3px; color: var(--accent-text); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; direction: ltr; }
+[dir="rtl"] .chips { justify-content: flex-end; }
+.chips li { font-size: 14px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; }
+.tile .status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 15px; color: var(--muted); }
+.status-line .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-weight: 600; }
+.project-text .visit { justify-self: start; min-height: 48px; padding: 0 22px; font-size: 16px; }
+.visit svg { transition: translate 240ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .visit:hover svg { translate: 3px -3px; } [dir="rtl"] .visit:hover svg { translate: -3px -3px; } }
+.status-line .pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+/* ---------- Experience ---------- */
+.timeline { position: relative; view-timeline-name: --tl; }
+.timeline::before, .timeline .fill { content: ""; position: absolute; inset-inline-start: 7px; top: 14px; bottom: 14px; width: 2px; border-radius: 2px; }
+.timeline::before { background: var(--surface-3); }
+.timeline .fill { background: var(--accent); transform-origin: top; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.paused) .timeline .fill { animation: fill-y linear both; animation-timeline: --tl; animation-range: entry 50% exit 60%; }
+  }
+}
+@keyframes fill-y { from { transform: scaleY(0); } }
+.timeline-list { display: grid; gap: 6px; }
+.job { position: relative; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px 40px; padding-block: 28px; padding-inline: 52px 28px; border-radius: 24px; transition: background-color 240ms ease, opacity 240ms ease; }
+.job::before { content: ""; position: absolute; inset-inline-start: 1px; top: 37px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface-3); transition: background-color 200ms ease; }
+.job.current::before { background: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .timeline-list:hover .job { opacity: 0.45; }
+  .timeline-list:hover .job:hover { opacity: 1; background: var(--surface); }
+  .timeline-list .job:hover::before { background: var(--accent); }
+}
+.job .when { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; padding-top: 6px; }
+.job h3 { font-size: clamp(1.5rem, 1.1rem + 1vw, 2.125rem); letter-spacing: -0.03em; line-height: 1.15; }
+:lang(ar) .job h3 { letter-spacing: 0; line-height: 1.35; }
+.job .role { color: var(--accent-text); font-size: 16px; font-weight: 600; margin-top: 4px; }
+.job .did { color: var(--muted); margin-top: 10px; max-width: 64ch; }
+.job ul.did { display: grid; gap: 6px; }
+.job ul.did li { display: grid; grid-template-columns: 16px minmax(0, 1fr); }
+.job ul.did li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--dim); margin-top: 12px; }
+.extras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.extras .tile { align-content: start; }
+.extras .tile p { color: var(--ink); font-size: 19px; }
+
+/* ---------- Skills ---------- */
+.kit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.kit .tile { align-content: start; gap: 18px; }
+.kit ul { display: flex; flex-wrap: wrap; gap: 8px; direction: ltr; }
+[dir="rtl"] .kit ul { justify-content: flex-end; }
+.kit li { font-size: 15px; padding: 7px 13px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .kit li:hover { background: var(--accent); color: var(--accent-ink); transform: translateY(-2px); } }
+.kit .wide { grid-column: span 2; }
+
+/* ---------- Contact ---------- */
+.contact { padding-block: var(--section) 40px; }
+.contact-big { font-weight: 800; font-size: clamp(3.5rem, 0.5rem + 13vw, 13rem); line-height: 0.92; letter-spacing: -0.06em; }
+:lang(ar) .contact-big { letter-spacing: 0; line-height: 1.25; }
+:lang(de) .contact-big { font-size: clamp(3rem, 0.5rem + 10vw, 10rem); }
+.contact-big a { text-decoration: none; display: inline-flex; align-items: center; gap: 0.12em; }
+.contact-big .w { display: inline-block; transition: transform 500ms var(--ease-out), color 300ms ease; }
+.contact-big .arrow { width: 0.62em; height: 0.62em; color: var(--accent-text); flex: none; transition: rotate 500ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .contact-big a:hover .w { color: var(--accent-text); transform: translateY(-0.05em); }
+  .contact-big a:hover .arrow { rotate: 45deg; }
+}
+.contact-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; margin-top: clamp(48px, 7vw, 96px); align-items: start; }
+.contact-row > p { color: var(--muted); font-size: 20px; max-width: 40ch; }
+.links { display: grid; gap: 8px; }
+.links > * { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 22px; border-radius: 20px; background: var(--surface); }
+.links a.row-link { text-decoration: none; font-size: 20px; font-weight: 600; transition: background-color 160ms ease; }
+.links a.row-link svg { width: 20px; height: 20px; color: var(--muted); transition: translate 240ms var(--ease-out), color 160ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  .links a.row-link:hover { background: var(--surface-2); }
+  .links a.row-link:hover svg { translate: 3px -3px; color: var(--accent-text); }
+  [dir="rtl"] .links a.row-link:hover svg { translate: -3px -3px; }
+}
+.email { font-size: 18px; font-weight: 600; word-break: break-all; user-select: all; direction: ltr; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 72px; font-size: 14px; color: var(--dim); }
+
+/* ---------- Overlays: viewing bar + toast ---------- */
+.imp-bar {
+  position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 70; width: min(calc(100% - 32px), 640px);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; padding-inline: 18px 10px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35); /* taste-skill-ignore: floating banner */
+  transform: translate(-50%, calc(100% + 40px)); transition: transform 200ms var(--ease-out);
+}
+.imp-bar[data-on="true"] { transform: translate(-50%, 0); transition: transform 500ms var(--ease-drawer); }
+.imp-bar p { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.imp-bar svg { width: 18px; height: 18px; flex: none; }
+.imp-exit { border: 0; background: var(--accent-ink); color: var(--accent); font-weight: 700; font-size: 14px; min-height: 40px; padding: 0 16px; border-radius: 999px; cursor: pointer; transition: transform 160ms var(--ease-out); }
+.imp-exit:active { transform: scale(0.96); }
+.imp-exit:focus-visible { outline-color: var(--accent-ink); }
+.toast {
+  position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 80;
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px;
+  background: var(--ink); color: var(--bg); font-weight: 600; font-size: 15px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35); /* taste-skill-ignore: toast floats */
+  transform: translate(-50%, calc(100% + 40px)); opacity: 0; transition: transform 400ms var(--ease-out), opacity 300ms ease; pointer-events: none;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.toast svg { width: 18px; height: 18px; color: var(--accent); }
+
+/* ---------- Responsive ---------- */
+@media (min-width: 1001px) and (max-width: 1320px) { .tag, .phone { zoom: 0.78; } .project-stage { padding-inline: 12px; gap: 40px; } }
+@media (max-width: 1000px) {
+  .bento { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .t-gauge, .t-load { grid-column: span 6; grid-row: auto; }
+  .t-seo, .t-cov { grid-column: span 3; }
+  .contrib { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .project, .also { grid-template-columns: minmax(0, 1fr); }
+  .kit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  body { font-size: 17px; }
+  .hero-foot, .head, .contact-row { grid-template-columns: minmax(0, 1fr); }
+  .hero-actions { justify-self: start; }
+  .t-seo, .t-cov { grid-column: span 6; }
+  .contrib, .extras, .kit { grid-template-columns: minmax(0, 1fr); }
+  .kit .wide { grid-column: auto; }
+  .job { grid-template-columns: minmax(0, 1fr); padding-block: 22px; padding-inline: 40px 8px; }
+  .job::before { top: 29px; }
+  .project-stage { min-height: 0; padding: 44px 12px; gap: 22px; }
+  .tag, .phone { zoom: 0.56; }
+  .contrib .tile { min-height: 0; }
+  .imp-bar .long { display: none; }
+}
+
+/* ---------- Reduced motion / paused ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .tag .scan { animation: none !important; }
+}
+.paused *, .paused *::before, .paused *::after { animation: none !important; }
+.paused .progress { display: none; }
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7L16 9.7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-arrow-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 5.5v13l10-6.5-10-6.5Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-paw" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="6" cy="10" rx="2.2" ry="2.8"/><ellipse cx="10" cy="6" rx="2.2" ry="2.8"/><ellipse cx="14.5" cy="6" rx="2.2" ry="2.8"/><ellipse cx="18.5" cy="10" rx="2.2" ry="2.8"/><path d="M12.2 11c-3 0-6.2 4.2-6.2 6.6 0 1.6 1.3 2.4 2.8 2.4 1.4 0 2.2-.8 3.4-.8s2 .8 3.4.8c1.5 0 2.8-.8 2.8-2.4 0-2.4-3.2-6.6-6.2-6.6Z"/></symbol>
+</svg>
+
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<header class="nav-bar" id="navBar">
+  <nav class="wrap nav" data-i18n-aria="navLabel" aria-label="Main">
+    <a class="wordmark" href="#top" data-i18n-aria="home" aria-label="Mohamed Abdel Hamid, back to top"><span class="mark" aria-hidden="true">MA</span><span aria-hidden="true" data-i18n="first">Mohamed</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#impact" data-i18n="navImpact">Impact</a></li>
+      <li><a href="#project" data-i18n="navProject">La2eeto</a></li>
+      <li><a href="#experience" data-i18n="navExp">Experience</a></li>
+      <li><a href="#skills" data-i18n="navSkills">Skills</a></li>
+      <li><a href="#contact" data-i18n="navContact">Contact</a></li>
+    </ul>
+    <div class="nav-tools">
+      <div class="lang" role="group" data-i18n-aria="langLabel" aria-label="Language">
+        <button type="button" lang="en" data-lang="en" aria-pressed="true" aria-label="English">EN</button>
+        <button type="button" lang="ar" data-lang="ar" aria-pressed="false" aria-label="العربية">ع</button>
+        <button type="button" lang="de" data-lang="de" aria-pressed="false" aria-label="Deutsch">DE</button>
+      </div>
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch to dark theme"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button>
+      <button class="icon-btn motion-btn" id="motionBtn" type="button" aria-pressed="false" aria-label="Pause animations"><svg class="off" aria-hidden="true"><use href="#i-pause"/></svg><svg class="on" aria-hidden="true"><use href="#i-play"/></svg></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks" data-i18n-aria="menu" aria-label="Menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+      <a class="pill-btn solid hire" href="#contact"><span class="status-dot" aria-hidden="true"></span><span data-i18n="hire">Open to frontend roles</span></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1" style="outline:none">
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <canvas class="field" id="field" aria-hidden="true"></canvas>
+    <div class="wrap hero-inner">
+      <p class="hero-status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="status">Frontend Engineer at Sonnen, a Shell subsidiary · Cairo</span></p>
+      <h1 id="hero-h" aria-label="Mohamed Abdel Hamid"><span class="line" aria-hidden="true" id="nameA">Mohamed</span><span class="line" aria-hidden="true" id="nameB">Abdel Hamid</span></h1>
+      <div class="hero-foot">
+        <p class="lede">
+          <span class="sr-only" data-i18n="ledeSr">I build fast, accessible web apps, interfaces, component libraries and mobile apps with React and TypeScript.</span>
+          <span aria-hidden="true"><span data-i18n="ledePre">I build fast, accessible</span> <span class="roller" id="roller"><span data-state="now">web apps</span></span> <span data-i18n="ledePost">with React and TypeScript.</span></span>
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary magnetic" href="#impact"><span data-i18n="ctaWork">See my work</span><svg class="flip flip-x" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <button class="btn btn-ghost magnetic" type="button" data-copy><span data-i18n="ctaCopy">Copy email</span><svg aria-hidden="true"><use href="#i-copy"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="marquee" data-i18n-aria="techLabel" aria-label="Technologies I work with">
+    <p class="sr-only">React, TypeScript, Next.js, React Native, Tailwind CSS, Storybook, Vitest, Cypress, TanStack Query, Zustand, Node.js, Terraform, AWS, Docker, Kubernetes, GitHub Actions, Sentry, PWA.</p>
+    <div aria-hidden="true"><div class="marquee-track" id="mq1"></div><div class="marquee-track rev" id="mq2"></div></div>
+  </section>
+
+  <section class="wrap section" id="impact" aria-labelledby="impact-h">
+    <div class="head">
+      <h2 id="impact-h"><span data-i18n="impactH">What I added</span> <span class="dim" data-i18n="impactDim">at Sonnen.</span></h2>
+      <p class="reveal" data-i18n="impactP">Since April 2025 I've owned features end to end and moved the numbers that matter: speed, search visibility and confidence in the tests.</p>
+    </div>
+    <div class="bento">
+      <article class="tile t-gauge reveal">
+        <h3 data-i18n="perfH">Performance score</h3>
+        <div class="gauge" role="img" data-i18n-aria="perfAria" aria-label="Performance score raised from 52 to 83 out of 100">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="track" cx="60" cy="60" r="52"/>
+            <circle class="was" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="52 100"/>
+            <circle class="now" id="gaugeNow" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="83 100"/>
+          </svg>
+          <div class="gauge-label" aria-hidden="true"><div><strong data-count="83" data-from="52">83</strong><span data-i18n="perfFrom">from 52</span></div></div>
+        </div>
+        <div class="gauge-legend" aria-hidden="true"><span><i style="background:var(--surface-3)"></i><span data-i18n="before">Before</span></span><span><i style="background:var(--accent)"></i><span data-i18n="now">Now</span></span></div>
+      </article>
+      <article class="tile t-load reveal">
+        <h3 data-i18n="loadH">Load time</h3>
+        <p class="big-num" data-i18n-aria="loadAria" aria-label="About 10 seconds faster"><span aria-hidden="true">−<span data-count="10" data-from="0">10</span>s</span><small aria-hidden="true" data-i18n="faster">faster</small></p>
+        <div class="speed" aria-hidden="true"><i></i></div>
+        <p data-i18n="loadP">Roughly ten seconds cut from the app's load time.</p>
+      </article>
+      <article class="tile t-seo reveal-2">
+        <h3 data-i18n="seoH">SEO score</h3>
+        <p class="big-num" data-i18n-aria="seoAria" aria-label="SEO score from 50 to 100"><span class="from" aria-hidden="true">50 →</span><span aria-hidden="true" data-count="100" data-from="50">100</span></p>
+        <p data-i18n="seoP">A perfect score.</p>
+      </article>
+      <article class="tile t-cov reveal-2">
+        <h3 data-i18n="covH">Unit test coverage</h3>
+        <div class="bars" aria-hidden="true"><div><i style="--v:70"></i>70%</div><div class="now"><i style="--v:89"></i>89%</div></div>
+        <p class="sr-only" data-i18n="covSr">Unit test coverage raised from 70% to 89%.</p>
+      </article>
+    </div>
+
+    <div class="contrib">
+      <article class="tile reveal"><p class="big-num"><span data-count="7" data-from="0">7</span>+</p><p data-i18n="c1">web apps migrated to AWS on my own, with infrastructure as code</p></article>
+      <article class="tile reveal-2"><p class="big-num"><span data-count="10" data-from="0">10</span></p><p data-i18n="c2">country corporate sites, frontend migration led by me</p></article>
+      <article class="tile reveal"><p class="big-num word" data-i18n="c3n">All</p><p data-i18n="c3">customer and partner apps use the user impersonation feature I built and own</p></article>
+      <article class="tile reveal-2"><p class="big-num">AA</p><p data-i18n="c4">the WCAG 2.x accessibility level I lead our work toward</p></article>
+    </div>
+
+    <div class="also">
+      <article class="tile ink reveal"><p id="alsoText">I own the technical direction of what I build. I make architecture calls with product and stakeholders, review code, onboard engineers and document the decisions so the team keeps moving.</p></article>
+      <article class="tile persona-tile reveal-2">
+        <h3 data-i18n="personaH">See it your way</h3>
+        <p data-i18n="personaP">Pick who you are and the summary adapts.</p>
+        <div class="personas" role="group" data-i18n-aria="personaLegend" aria-label="View this page as">
+          <button class="persona" type="button" data-persona="everyone" id="p-everyone" aria-pressed="true"><span class="av" style="background:#a8acbc" aria-hidden="true">MA</span><span data-i18n="pEveryone">Anyone</span></button>
+          <button class="persona" type="button" data-persona="recruiter" id="p-recruiter" aria-pressed="false"><span class="av" style="background:#8ea6ff" aria-hidden="true">RC</span><span data-i18n="pRecruiter">Recruiter</span></button>
+          <button class="persona" type="button" data-persona="lead" id="p-lead" aria-pressed="false"><span class="av" style="background:#4ad38a" aria-hidden="true">EL</span><span data-i18n="pLead">Engineering lead</span></button>
+          <button class="persona" type="button" data-persona="designer" id="p-designer" aria-pressed="false"><span class="av" style="background:#ff9a7a" aria-hidden="true">DS</span><span data-i18n="pDesigner">Designer</span></button>
+        </div>
+        <div class="preview" aria-live="polite">
+          <p class="preview-title" id="previewTitle">What you'll see first</p>
+          <p class="preview-lede" id="previewLede">Frontend engineer in Cairo building fast, accessible web apps with React and TypeScript.</p>
+          <ul class="facts" id="facts"></ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap section" id="project" aria-labelledby="project-h" style="padding-top:0">
+    <div class="head">
+      <h2 id="project-h"><span data-i18n="projH">La2eeto</span> <span class="dim" data-i18n="projDim">my side project.</span></h2>
+      <p class="reveal" data-i18n="projP">A QR tag for anything you'd hate to lose. Whoever finds it scans the tag and reaches the owner, with no app to install. Contact details stay private until the owner turns on Lost Mode.</p>
+    </div>
+    <div class="project">
+      <div class="project-stage reveal" role="img" data-i18n-aria="stageAria" aria-label="A La2eeto QR tag and an example scan page in English and Arabic">
+        <span class="demo-chip" aria-hidden="true" data-i18n="demo">Demo</span>
+        <div class="tag" aria-hidden="true">
+          <span class="hole"></span>
+          <div class="qr"><svg viewBox="-1 -1 27 27" shape-rendering="crispEdges"><rect x="-1" y="-1" width="27" height="27" fill="#fdfcf9"/><path fill="#0f2433" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM9 0h1v1h-1zM14 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM14 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM0 9h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM19 9h1v1h-1zM23 9h1v1h-1zM3 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM10 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM24 13h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM20 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM24 15h1v1h-1zM3 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM20 19h1v1h-1zM24 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM0 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM0 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1z"/></svg><span class="scan"></span></div>
+          <p>If found, scan<span lang="ar">لو لقيته، امسح الرمز</span></p>
+        </div>
+        <div class="phone" aria-hidden="true">
+          <div class="screen">
+            <div class="screen-page" data-show="true" dir="ltr" lang="en">
+              <span class="lost">Lost Mode is on</span>
+              <div class="pet"><svg><use href="#i-paw"/></svg></div>
+              <h4>Hi, I'm Luna</h4>
+              <p>My family is looking for me. Please let them know where I am.</p>
+              <span class="act primary">Message my family</span>
+              <span class="act soft">She's safe with me</span>
+            </div>
+            <div class="screen-page" data-show="false" dir="rtl" lang="ar">
+              <span class="lost">وضع الفقد مفعّل</span>
+              <div class="pet"><svg><use href="#i-paw"/></svg></div>
+              <h4>أهلاً، أنا لونا</h4>
+              <p>عائلتي تبحث عني. من فضلك أخبرهم أين أنا.</p>
+              <span class="act primary">راسل عائلتي</span>
+              <span class="act soft">إنها بأمان معي</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tile project-text reveal-2">
+        <h3 data-i18n="projRole">Designed and built end to end, from product idea to production code.</h3>
+        <ul class="feats">
+          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f1">Arabic and English, with right-to-left done properly</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f2">Installable PWA with push notifications</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f3">Privacy first: every detail starts private and the owner decides what the page shows</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f4">An accessible scan page that works on low-end phones</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f5">Its own design tokens and UI library, a web app, an API and a server-rendered scan page</span></li>
+        </ul>
+        <ul class="chips" data-i18n-aria="builtWith" aria-label="Built with"><li>React</li><li>TypeScript</li><li>Vite</li><li>TanStack Query</li><li>React Hook Form</li><li>Zod</li><li>i18next</li><li>Node.js</li><li>Web Push</li><li>Sentry</li><li>Vitest</li></ul>
+        <p class="status-line"><span class="pill"><i aria-hidden="true"></i><span data-i18n="projStatus">Live</span></span></p>
+        <a class="pill-btn solid visit" href="https://la2eeto.app" target="_blank" rel="noopener"><span><span data-i18n="visit">Open la2eeto.app</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span></span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="experience" aria-labelledby="exp-h" style="padding-top:0">
+    <div class="head">
+      <h2 id="exp-h"><span data-i18n="expH">Six roles</span> <span class="dim" data-i18n="expDim">since 2021.</span></h2>
+      <p class="reveal" data-i18n="expP">From freelance sites to product teams at a Shell company, much of it remote.</p>
+    </div>
+    <div class="timeline">
+      <span class="fill" aria-hidden="true"></span>
+      <ol class="timeline-list">
+        <li class="job current reveal">
+          <p class="when" data-i18n="d1">Apr 2025 – Present</p>
+          <div>
+            <h3>Sonnen GmbH</h3>
+            <p class="role" data-i18n="r1">Frontend Engineer · Shell subsidiary</p>
+            <ul class="did">
+              <li data-i18n="s1">Own features end to end: architecture, implementation, testing and accessibility</li>
+              <li data-i18n="s2">Turn business requirements into technical designs with product and stakeholders</li>
+              <li data-i18n="s3">Build reusable component libraries and contribute to the design system</li>
+              <li data-i18n="s4">Built the user impersonation feature now used across all customer and partner apps</li>
+              <li data-i18n="s5">Cut load time by ~10s; performance 52 → 83, SEO 50 → 100, coverage 70% → 89%</li>
+              <li data-i18n="s6">Migrated 7+ apps to AWS on my own; led 10 country sites to Webflow</li>
+              <li data-i18n="s7">Lead accessibility work toward WCAG 2.x AA; run code reviews and onboarding</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job reveal"><p class="when" data-i18n="d2">Oct 2024 – Mar 2025</p><div><h3>Purafi</h3><p class="role" data-i18n="r2">Frontend Developer · Remote</p><p class="did" data-i18n="t2">Built a responsive, scalable React UI for the MVP with backend engineers, designers and the Product Owner.</p></div></li>
+        <li class="job reveal"><p class="when" data-i18n="d3">Feb 2024 – Sep 2024</p><div><h3>Inframodern</h3><p class="role" data-i18n="r3">React Native Developer · Remote</p><p class="did" data-i18n="t3">Built and maintained a React Native mobile app with the backend team and team lead.</p></div></li>
+        <li class="job reveal"><p class="when" data-i18n="d4">Jul 2023 – Jan 2024</p><div><h3>Remote Web Team</h3><p class="role" data-i18n="r4">Frontend Developer</p><p class="did" data-i18n="t4">Built responsive client websites with backend developers and designers.</p></div></li>
+        <li class="job reveal"><p class="when" data-i18n="d5">Apr 2023 – Jun 2023</p><div><h3>Mahaseel Masr</h3><p class="role" data-i18n="r5">Frontend Developer Trainee</p><p class="did" data-i18n="t5">React and Material UI dashboards and forms with Redux Toolkit, Formik, Yup and Chart.js.</p></div></li>
+        <li class="job reveal"><p class="when" data-i18n="d6">Jan 2021 – Nov 2022</p><div><h3 data-i18n="freelance">Freelance</h3><p class="role" data-i18n="r6">Frontend Developer</p><p class="did" data-i18n="t6">Delivered client projects in HTML, CSS, JavaScript, Bootstrap and React.</p></div></li>
+      </ol>
+    </div>
+    <div class="extras">
+      <div class="tile reveal"><h3 data-i18n="eduH">Education</h3><p data-i18n="eduP">Bachelor of Business Administration, Ain Shams University (English Section), 2018–2022. Grade: Very Good.</p></div>
+      <div class="tile reveal-2"><h3 data-i18n="langH">Languages</h3><p data-i18n="langP">Arabic, native. English, professional working proficiency.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="skills" aria-labelledby="kit-h" style="padding-top:0">
+    <div class="head">
+      <h2 id="kit-h" data-i18n="skillsH">Skills.</h2>
+      <p class="reveal" data-i18n="skillsP">What I work with, grouped by the job it does.</p>
+    </div>
+    <div class="kit">
+      <div class="tile wide reveal"><h3 data-i18n="g1">Frameworks and UI</h3><ul><li>React</li><li>React Native</li><li>Next.js</li><li>Vite</li><li>Tailwind CSS</li><li>shadcn/ui</li><li>Storybook</li><li>Recharts</li><li>Bootstrap</li><li>React Router</li><li>React Hook Form</li></ul></div>
+      <div class="tile reveal-2"><h3 data-i18n="g2">Languages</h3><ul><li>TypeScript</li><li>JavaScript (ES6+)</li><li>HTML5</li><li>CSS3</li></ul></div>
+      <div class="tile reveal"><h3 data-i18n="g3">State and data</h3><ul><li>Redux</li><li>Redux Toolkit</li><li>Zustand</li><li>TanStack Query</li><li>GraphQL</li><li>Apollo Client</li><li>Zod</li><li>JSON</li></ul></div>
+      <div class="tile reveal-2"><h3 data-i18n="g4">Backend and databases</h3><ul><li>Node.js</li><li>REST APIs</li><li>WebSockets</li><li>Prisma</li><li>Drizzle ORM</li></ul></div>
+      <div class="tile reveal"><h3 data-i18n="g5">Testing and quality</h3><ul><li>Jest</li><li>Vitest</li><li>React Testing Library</li><li>Cypress</li><li>Sentry</li><li>ESLint</li><li>Prettier</li><li>Cross-browser testing</li></ul></div>
+      <div class="tile wide reveal-2"><h3 data-i18n="g6">Cloud, DevOps and tooling</h3><ul><li>AWS S3</li><li>CloudFront</li><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>GitHub Actions</li><li>GitLab</li><li>CI/CD</li><li>Git</li><li>npm / yarn</li><li>POEditor</li></ul></div>
+      <div class="tile reveal"><h3 data-i18n="g7">Accessibility, SEO and web</h3><ul><li>WCAG 2.x AA</li><li>Semantic HTML</li><li>ARIA</li><li>Web performance</li><li>SEO</li><li>Responsive UI</li><li>PWA</li><li>Web Push</li><li>i18n and RTL</li></ul></div>
+      <div class="tile wide reveal-2"><h3 data-i18n="g8">Integrations and analytics</h3><ul><li>Webflow</li><li>Zapier</li><li>Salesforce</li><li>reCAPTCHA</li><li>LaunchDarkly</li><li>Google Tag Manager</li><li>GA4</li><li>Usercentrics</li><li>Meta Pixel</li><li>AJAX</li></ul></div>
+      <div class="tile reveal"><h3 data-i18n="g9">Practices</h3><ul><li>Frontend architecture</li><li>Component libraries</li><li>Design systems</li><li>SOLID</li><li>OOP</li><li>Data structures and algorithms</li><li>Agile</li><li>Scrum</li><li>Code review</li><li>Technical documentation</li></ul></div>
+    </div>
+  </section>
+</main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <h2 class="contact-big" id="contact-h"><a href="mailto:mohamedabdelhamid7895@gmail.com"><span class="w" data-i18n="talk">Let's talk</span><svg class="arrow flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg><span class="sr-only" data-i18n="talkSr">, send me an email</span></a></h2>
+    <div class="contact-row">
+      <p data-i18n="contactP">I'm open to frontend roles. Email is the fastest way to reach me.</p>
+      <div class="links">
+        <div><span class="email" id="email">mohamedabdelhamid7895@gmail.com</span><button class="pill-btn solid" type="button" data-copy><svg aria-hidden="true"><use href="#i-copy"/></svg><span data-i18n="ctaCopy">Copy email</span></button></div>
+        <a class="row-link" href="https://www.linkedin.com/in/mohamedabdelhamid" target="_blank" rel="noopener">LinkedIn<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+        <a class="row-link" href="https://github.com/mohamedabdelhamid" target="_blank" rel="noopener">GitHub<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+      </div>
+    </div>
+    <div class="foot"><span data-i18n="foot">Mohamed Abdel Hamid · Cairo, Egypt</span><span>© 2026</span></div>
+  </div>
+</footer>
+
+<div class="imp-bar" id="impBar" data-on="false" role="region" data-i18n-aria="impRegion" aria-label="Viewing banner" hidden>
+  <p><svg aria-hidden="true"><use href="#i-eye"/></svg><span><span data-i18n="impAs">Viewing as</span> <b id="impName"></b><span class="long" data-i18n="impLong"> · this page is tailored for you</span></span></p>
+  <button class="imp-exit" id="impExit" type="button" data-i18n="impExit">Exit</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span id="toastText"></span></div>
+
+<script>
+(() => {
+  const I18N = {
+    en: {
+      skip: "Skip to content", navLabel: "Main", home: "Mohamed Abdel Hamid, back to top", first: "Mohamed",
+      navImpact: "Impact", navProject: "La2eeto", navExp: "Experience", navSkills: "Skills", navContact: "Contact",
+      langLabel: "Language", motion: "Pause animations", motionOn: "Play animations", menu: "Menu", hire: "Open to frontend roles",
+      themeToDark: "Switch to dark theme", themeToLight: "Switch to light theme",
+      status: "Frontend Engineer at Sonnen, a Shell subsidiary · Cairo",
+      nameA: "Mohamed", nameB: "Abdel Hamid", name: "Mohamed Abdel Hamid",
+      ledeSr: "I build fast, accessible web apps, interfaces, component libraries and mobile apps with React and TypeScript.",
+      ledePre: "I build fast, accessible", ledePost: "with React and TypeScript.",
+      roll: ["web apps", "interfaces", "component libraries", "mobile apps"],
+      ctaWork: "See my work", ctaCopy: "Copy email", techLabel: "Technologies I work with",
+      impactH: "What I added", impactDim: "at Sonnen.",
+      impactP: "Since April 2025 I've owned features end to end and moved the numbers that matter: speed, search visibility and confidence in the tests.",
+      perfH: "Performance score", perfAria: "Performance score raised from 52 to 83 out of 100", perfFrom: "from 52", before: "Before", now: "Now",
+      loadH: "Load time", loadAria: "About 10 seconds faster", faster: "faster", loadP: "Roughly ten seconds cut from the app's load time.",
+      seoH: "SEO score", seoAria: "SEO score from 50 to 100", seoP: "A perfect score.",
+      covH: "Unit test coverage", covSr: "Unit test coverage raised from 70% to 89%.",
+      c1: "web apps migrated to AWS on my own, with infrastructure as code", c2: "country corporate sites, frontend migration led by me",
+      c3n: "All", c3: "customer and partner apps use the user impersonation feature I built and own", c4: "the WCAG 2.x accessibility level I lead our work toward",
+      alsoP: "I also run code reviews, onboard new engineers, write technical documentation, and turn business requirements into technical designs with product.",
+      personaH: "See it your way", personaP: "Pick who you are and the summary adapts.", personaLegend: "View this page as",
+      pEveryone: "Anyone", pRecruiter: "Recruiter", pLead: "Engineering lead", pDesigner: "Designer",
+      personas: {
+        everyone: { also: "I own the technical direction of what I build. I make architecture calls with product and stakeholders, review code, onboard engineers and document the decisions so the team keeps moving.", title: "What you'll see first", lede: "Frontend engineer in Cairo building fast, accessible web apps with React and TypeScript.", facts: ["4+ years of React and TypeScript", "Frontend Engineer at Sonnen, a Shell subsidiary", "Performance score raised from 52 to 83"] },
+        recruiter: { also: "Beyond shipping features, I lead: I drive architecture decisions with product, review code, onboard new engineers and keep the technical documentation current.", title: "For recruiters", lede: "Frontend Engineer at Sonnen since April 2025, with 4+ years of React and TypeScript.", facts: ["Based in Cairo, three remote roles behind me", "Arabic native, professional English", "BBA, Ain Shams University, 2022"] },
+        lead: { also: "I turn business requirements into technical designs, make the architecture calls with product, and raise the team's bar through code reviews, onboarding and documentation.", title: "For engineering leads", lede: "I own features end to end: architecture, tests, accessibility and delivery.", facts: ["Unit test coverage raised from 70% to 89%", "Moved 7+ apps to AWS on my own", "Runs code reviews and onboards engineers"] },
+        designer: { also: "I translate design intent into technical decisions with product, review components for accessibility and consistency, and document them so every engineer builds them the same way.", title: "For designers", lede: "I build the component libraries designs ship through, and test them with a keyboard and a screen reader.", facts: ["Contributes to the company design system", "Leads accessibility work toward WCAG 2.x AA", "Storybook, Tailwind CSS and shadcn/ui"] }
+      },
+      projH: "La2eeto", projDim: "my side project.",
+      projP: "A QR tag for anything you'd hate to lose. Whoever finds it scans the tag and reaches the owner, with no app to install. Contact details stay private until the owner turns on Lost Mode.",
+      stageAria: "A La2eeto QR tag and an example scan page in English and Arabic", demo: "Demo",
+      projRole: "Designed and built end to end, from product idea to production code.",
+      f1: "Arabic and English, with right-to-left done properly", f2: "Installable PWA with push notifications",
+      f3: "Privacy first: every detail starts private and the owner decides what the page shows", f4: "An accessible scan page that works on low-end phones",
+      f5: "Its own design tokens and UI library, a web app, an API and a server-rendered scan page", builtWith: "Built with", projStatus: "Live", visit: "Open la2eeto.app",
+      expH: "Six roles", expDim: "since 2021.", expP: "From freelance sites to product teams at a Shell company, much of it remote.",
+      d1: "Apr 2025 – Present", r1: "Frontend Engineer · Shell subsidiary",
+      s1: "Own features end to end: architecture, implementation, testing and accessibility",
+      s2: "Turn business requirements into technical designs with product and stakeholders",
+      s3: "Build reusable component libraries and contribute to the design system",
+      s4: "Built the user impersonation feature now used across all customer and partner apps",
+      s5: "Cut load time by ~10s; performance 52 → 83, SEO 50 → 100, coverage 70% → 89%",
+      s6: "Migrated 7+ apps to AWS on my own; led 10 country sites to Webflow",
+      s7: "Lead accessibility work toward WCAG 2.x AA; run code reviews and onboarding",
+      d2: "Oct 2024 – Mar 2025", r2: "Frontend Developer · Remote", t2: "Built a responsive, scalable React UI for the MVP with backend engineers, designers and the Product Owner.",
+      d3: "Feb 2024 – Sep 2024", r3: "React Native Developer · Remote", t3: "Built and maintained a React Native mobile app with the backend team and team lead.",
+      d4: "Jul 2023 – Jan 2024", r4: "Frontend Developer", t4: "Built responsive client websites with backend developers and designers.",
+      d5: "Apr 2023 – Jun 2023", r5: "Frontend Developer Trainee", t5: "React and Material UI dashboards and forms with Redux Toolkit, Formik, Yup and Chart.js.",
+      d6: "Jan 2021 – Nov 2022", freelance: "Freelance", r6: "Frontend Developer", t6: "Delivered client projects in HTML, CSS, JavaScript, Bootstrap and React.",
+      eduH: "Education", eduP: "Bachelor of Business Administration, Ain Shams University (English Section), 2018–2022. Grade: Very Good.",
+      langH: "Languages", langP: "Arabic, native. English, professional working proficiency.",
+      skillsH: "Skills.", skillsP: "What I work with, grouped by the job it does.",
+      g1: "Frameworks and UI", g2: "Languages", g3: "State and data", g4: "Backend and databases", g5: "Testing and quality", g6: "Cloud, DevOps and tooling", g7: "Accessibility, SEO and web", g8: "Integrations and analytics", g9: "Practices",
+      talk: "Let's talk", talkSr: ", send me an email", contactP: "I'm open to frontend roles. Email is the fastest way to reach me.",
+      newTab: " (opens in a new tab)", foot: "Mohamed Abdel Hamid · Cairo, Egypt",
+      impRegion: "Viewing banner", impAs: "Viewing as", impLong: " · this page is tailored for you", impExit: "Exit",
+      copied: "Email copied", selected: "Email selected. Press Ctrl or Cmd + C to copy."
+    },
+    ar: {
+      skip: "انتقل إلى المحتوى", navLabel: "القائمة الرئيسية", home: "محمد عبد الحميد، العودة إلى الأعلى", first: "محمد",
+      navImpact: "الإنجازات", navProject: "لاقيته", navExp: "الخبرة", navSkills: "المهارات", navContact: "تواصل",
+      langLabel: "اللغة", motion: "إيقاف الحركة", motionOn: "تشغيل الحركة", menu: "القائمة", hire: "متاح لوظائف الواجهات الأمامية",
+      themeToDark: "التبديل إلى الوضع الداكن", themeToLight: "التبديل إلى الوضع الفاتح",
+      status: "مهندس واجهات أمامية في Sonnen، إحدى شركات Shell · القاهرة",
+      nameA: "محمد", nameB: "عبد الحميد", name: "محمد عبد الحميد",
+      ledeSr: "أبني تطبيقات ويب وواجهات ومكتبات مكوّنات وتطبيقات جوال سريعة ومتاحة للجميع باستخدام React وTypeScript.",
+      ledePre: "أبني", ledePost: "سريعة ومتاحة للجميع باستخدام React وTypeScript.",
+      roll: ["تطبيقات ويب", "واجهات", "مكتبات مكوّنات", "تطبيقات جوال"],
+      ctaWork: "شاهد أعمالي", ctaCopy: "انسخ البريد", techLabel: "التقنيات التي أعمل بها",
+      impactH: "ما أضفته", impactDim: "في Sonnen.",
+      impactP: "منذ أبريل 2025 أتولى الميزات من الفكرة حتى الإطلاق، وحسّنت الأرقام المهمة: السرعة، والظهور في محركات البحث، والثقة في الاختبارات.",
+      perfH: "مؤشر الأداء", perfAria: "ارتفع مؤشر الأداء من 52 إلى 83 من 100", perfFrom: "من 52", before: "قبل", now: "الآن",
+      loadH: "زمن التحميل", loadAria: "أسرع بنحو 10 ثوانٍ", faster: "أسرع", loadP: "خفّضت زمن تحميل التطبيق بنحو عشر ثوانٍ.",
+      seoH: "مؤشر SEO", seoAria: "ارتفع مؤشر SEO من 50 إلى 100", seoP: "درجة كاملة.",
+      covH: "تغطية اختبارات الوحدات", covSr: "ارتفعت تغطية اختبارات الوحدات من 70% إلى 89%.",
+      c1: "تطبيقات ويب نقلتها إلى AWS بمفردي، مع إدارة البنية التحتية كشيفرة", c2: "مواقع شركات في دول مختلفة، قُدت نقل واجهاتها الأمامية",
+      c3n: "كل", c3: "تطبيقات العملاء والشركاء تستخدم ميزة الدخول بصفة مستخدم التي بنيتها وأتولاها", c4: "مستوى إتاحة الوصول WCAG 2.x الذي أقود عملنا نحوه",
+      alsoP: "كما أراجع الشيفرة، وأدرّب المهندسين الجدد، وأكتب التوثيق التقني، وأحوّل متطلبات العمل إلى تصميمات تقنية مع فريق المنتج.",
+      personaH: "شاهدها من زاويتك", personaP: "اختر من أنت وسيتغيّر الملخص ليناسبك.", personaLegend: "اعرض هذه الصفحة بصفة",
+      pEveryone: "أي زائر", pRecruiter: "مسؤول توظيف", pLead: "قائد فريق هندسي", pDesigner: "مصمم",
+      personas: {
+        everyone: { also: "أتولى الاتجاه التقني لما أبنيه: أتخذ قرارات البنية مع فريق المنتج وأصحاب المصلحة، وأراجع الشيفرة، وأدرّب المهندسين الجدد، وأوثّق القرارات ليواصل الفريق العمل بسلاسة.", title: "ما ستراه أولاً", lede: "مهندس واجهات أمامية في القاهرة يبني تطبيقات ويب سريعة ومتاحة للجميع باستخدام React وTypeScript.", facts: ["أكثر من 4 سنوات خبرة في React وTypeScript", "مهندس واجهات أمامية في Sonnen، إحدى شركات Shell", "رفعت مؤشر الأداء من 52 إلى 83"] },
+        recruiter: { also: "إلى جانب تسليم الميزات، أقود العمل: أقود قرارات البنية مع فريق المنتج، وأراجع الشيفرة، وأدرّب المهندسين الجدد، وأُبقي التوثيق التقني محدّثاً.", title: "لمسؤولي التوظيف", lede: "مهندس واجهات أمامية في Sonnen منذ أبريل 2025، بخبرة تزيد على 4 سنوات في React وTypeScript.", facts: ["مقيم في القاهرة، وعملت عن بُعد في ثلاث وظائف", "العربية لغتي الأم، والإنجليزية بمستوى مهني", "بكالوريوس إدارة الأعمال، جامعة عين شمس، 2022"] },
+        lead: { also: "أحوّل متطلبات العمل إلى تصميمات تقنية، وأتخذ قرارات البنية مع فريق المنتج، وأرفع مستوى الفريق عبر مراجعة الشيفرة والتدريب والتوثيق.", title: "لقادة الفرق الهندسية", lede: "أتولى الميزات من البداية للنهاية: البنية، والاختبارات، وإتاحة الوصول، والتسليم.", facts: ["رفعت تغطية اختبارات الوحدات من 70% إلى 89%", "نقلت أكثر من 7 تطبيقات إلى AWS بمفردي", "أراجع الشيفرة وأدرّب المهندسين الجدد"] },
+        designer: { also: "أترجم نية التصميم إلى قرارات تقنية مع فريق المنتج، وأراجع المكوّنات من حيث إتاحة الوصول والاتساق، وأوثّقها ليبنيها كل مهندس بالطريقة نفسها.", title: "للمصممين", lede: "أبني مكتبات المكوّنات التي تصل من خلالها التصميمات إلى المستخدمين، وأختبرها بلوحة المفاتيح وقارئ الشاشة.", facts: ["أساهم في نظام التصميم في الشركة", "أقود العمل على إتاحة الوصول وفق WCAG 2.x AA", "Storybook وTailwind CSS وshadcn/ui"] }
+      },
+      projH: "لاقيته", projDim: "مشروعي الجانبي.",
+      projP: "ملصق QR لأي شيء تخاف أن تفقده. من يجده يمسح الرمز ويصل إلى صاحبه دون تثبيت أي تطبيق، وتبقى بيانات التواصل خاصة حتى يفعّل المالك وضع الفقد.",
+      stageAria: "ملصق QR من لاقيته وصفحة مسح تجريبية بالإنجليزية والعربية", demo: "عرض تجريبي",
+      projRole: "صممته وبنيته بالكامل، من فكرة المنتج حتى شيفرة الإنتاج.",
+      f1: "العربية والإنجليزية، مع دعم صحيح للكتابة من اليمين إلى اليسار", f2: "تطبيق ويب قابل للتثبيت (PWA) مع إشعارات",
+      f3: "الخصوصية أولاً: كل البيانات خاصة من البداية والمالك يقرر ما يظهر في الصفحة", f4: "صفحة مسح متاحة للجميع وتعمل على الهواتف البسيطة",
+      f5: "رموز تصميم ومكتبة واجهات خاصة به، وتطبيق ويب، وواجهة API، وصفحة مسح تُعرض من الخادم", builtWith: "بُني باستخدام", projStatus: "متاح الآن", visit: "افتح la2eeto.app",
+      expH: "ست وظائف", expDim: "منذ 2021.", expP: "من مواقع العمل الحر إلى فرق المنتجات في إحدى شركات Shell، وكثير منها عن بُعد.",
+      d1: "أبريل 2025 – الآن", r1: "مهندس واجهات أمامية · إحدى شركات Shell",
+      s1: "أتولى الميزات من البداية للنهاية: البنية، والتنفيذ، والاختبار، وإتاحة الوصول",
+      s2: "أحوّل متطلبات العمل إلى تصميمات تقنية مع فريق المنتج وأصحاب المصلحة",
+      s3: "أبني مكتبات مكوّنات قابلة لإعادة الاستخدام وأساهم في نظام التصميم",
+      s4: "بنيت ميزة الدخول بصفة مستخدم التي تستخدمها الآن كل تطبيقات العملاء والشركاء",
+      s5: "خفّضت زمن التحميل بنحو 10 ثوانٍ؛ الأداء من 52 إلى 83، وSEO من 50 إلى 100، والتغطية من 70% إلى 89%",
+      s6: "نقلت أكثر من 7 تطبيقات إلى AWS بمفردي، وقُدت نقل مواقع 10 دول إلى Webflow",
+      s7: "أقود العمل على إتاحة الوصول وفق WCAG 2.x AA، وأراجع الشيفرة وأدرّب المهندسين الجدد",
+      d2: "أكتوبر 2024 – مارس 2025", r2: "مطوّر واجهات أمامية · عن بُعد", t2: "بنيت واجهة React متجاوبة وقابلة للتوسع للنسخة الأولى من المنتج مع مهندسي الخلفية والمصممين ومالك المنتج.",
+      d3: "فبراير 2024 – سبتمبر 2024", r3: "مطوّر React Native · عن بُعد", t3: "بنيت تطبيق جوال بـ React Native وطوّرته مع فريق الخلفية وقائد الفريق.",
+      d4: "يوليو 2023 – يناير 2024", r4: "مطوّر واجهات أمامية", t4: "بنيت مواقع متجاوبة للعملاء مع مطوّري الخلفية والمصممين.",
+      d5: "أبريل 2023 – يونيو 2023", r5: "متدرب تطوير واجهات أمامية", t5: "لوحات تحكم ونماذج بـ React وMaterial UI مع Redux Toolkit وFormik وYup وChart.js.",
+      d6: "يناير 2021 – نوفمبر 2022", freelance: "عمل حر", r6: "مطوّر واجهات أمامية", t6: "نفّذت مشاريع للعملاء باستخدام HTML وCSS وJavaScript وBootstrap وReact.",
+      eduH: "التعليم", eduP: "بكالوريوس إدارة الأعمال، جامعة عين شمس (القسم الإنجليزي)، 2018–2022. التقدير: جيد جداً.",
+      langH: "اللغات", langP: "العربية: اللغة الأم. الإنجليزية: مستوى مهني.",
+      skillsH: "المهارات.", skillsP: "الأدوات التي أعمل بها، مجمّعة حسب الغرض.",
+      g1: "أطر العمل والواجهات", g2: "لغات البرمجة", g3: "إدارة الحالة والبيانات", g4: "الخلفية وقواعد البيانات", g5: "الاختبار والجودة", g6: "السحابة وDevOps والأدوات", g7: "إتاحة الوصول وSEO والويب", g8: "التكاملات والتحليلات", g9: "الممارسات",
+      talk: "لنتحدث", talkSr: "، أرسل لي بريداً إلكترونياً", contactP: "أنا متاح لوظائف الواجهات الأمامية. البريد الإلكتروني أسرع طريقة للتواصل معي.",
+      newTab: " (يفتح في علامة تبويب جديدة)", foot: "محمد عبد الحميد · القاهرة، مصر",
+      impRegion: "شريط العرض", impAs: "تعرض الصفحة بصفة", impLong: " · هذه الصفحة مخصّصة لك", impExit: "خروج",
+      copied: "تم نسخ البريد الإلكتروني", selected: "تم تحديد البريد. اضغط Ctrl أو Cmd + C للنسخ."
+    },
+    de: {
+      skip: "Zum Inhalt springen", navLabel: "Hauptnavigation", home: "Mohamed Abdel Hamid, zurück nach oben", first: "Mohamed",
+      navImpact: "Ergebnisse", navProject: "La2eeto", navExp: "Erfahrung", navSkills: "Skills", navContact: "Kontakt",
+      langLabel: "Sprache", motion: "Animationen pausieren", motionOn: "Animationen abspielen", menu: "Menü", hire: "Offen für Frontend-Rollen",
+      themeToDark: "Zum dunklen Design wechseln", themeToLight: "Zum hellen Design wechseln",
+      status: "Frontend Engineer bei Sonnen, einem Shell-Tochterunternehmen · Kairo",
+      nameA: "Mohamed", nameB: "Abdel Hamid", name: "Mohamed Abdel Hamid",
+      ledeSr: "Ich baue schnelle, barrierefreie Web-Apps, Oberflächen, UI-Bibliotheken und mobile Apps mit React und TypeScript.",
+      ledePre: "Ich baue schnelle, barrierefreie", ledePost: "mit React und TypeScript.",
+      roll: ["Web-Apps", "Oberflächen", "UI-Bibliotheken", "mobile Apps"],
+      ctaWork: "Meine Arbeit", ctaCopy: "E-Mail kopieren", techLabel: "Technologien, mit denen ich arbeite",
+      impactH: "Was ich beitrage", impactDim: "bei Sonnen.",
+      impactP: "Seit April 2025 verantworte ich Features von Anfang bis Ende und verbessere die Zahlen, die zählen: Geschwindigkeit, Sichtbarkeit in Suchmaschinen und Vertrauen in die Tests.",
+      perfH: "Performance-Score", perfAria: "Performance-Score von 52 auf 83 von 100 gesteigert", perfFrom: "vorher 52", before: "Vorher", now: "Jetzt",
+      loadH: "Ladezeit", loadAria: "Etwa 10 Sekunden schneller", faster: "schneller", loadP: "Rund zehn Sekunden weniger Ladezeit für die Anwendung.",
+      seoH: "SEO-Score", seoAria: "SEO-Score von 50 auf 100", seoP: "Ein perfekter Wert.",
+      covH: "Unit-Test-Abdeckung", covSr: "Unit-Test-Abdeckung von 70 % auf 89 % gesteigert.",
+      c1: "Web-Apps im Alleingang zu AWS migriert, mit Infrastructure as Code", c2: "Länderseiten des Unternehmens, Frontend-Migration unter meiner Leitung",
+      c3n: "Alle", c3: "Kunden- und Partner-Apps nutzen die Impersonation-Funktion, die ich gebaut habe und verantworte", c4: "das WCAG-2.x-Level, auf das ich unsere Barrierefreiheit ausrichte",
+      alsoP: "Außerdem führe ich Code-Reviews durch, arbeite neue Engineers ein, schreibe technische Dokumentation und übersetze Geschäftsanforderungen mit dem Produktteam in technische Konzepte.",
+      personaH: "Aus deiner Sicht", personaP: "Wähle, wer du bist, und die Zusammenfassung passt sich an.", personaLegend: "Diese Seite ansehen als",
+      pEveryone: "Alle", pRecruiter: "Recruiter", pLead: "Engineering Lead", pDesigner: "Designer",
+      personas: {
+        everyone: { also: "Ich verantworte die technische Richtung dessen, was ich baue: Architekturentscheidungen mit Produkt und Stakeholdern, Code-Reviews, Onboarding neuer Engineers und dokumentierte Entscheidungen, damit das Team zügig weiterarbeitet.", title: "Was du zuerst siehst", lede: "Frontend Engineer in Kairo, der schnelle, barrierefreie Web-Apps mit React und TypeScript baut.", facts: ["Über 4 Jahre React und TypeScript", "Frontend Engineer bei Sonnen, einem Shell-Tochterunternehmen", "Performance-Score von 52 auf 83 gesteigert"] },
+        recruiter: { also: "Über das Ausliefern von Features hinaus übernehme ich Verantwortung: Ich treibe Architekturentscheidungen mit dem Produktteam voran, führe Code-Reviews durch, arbeite neue Engineers ein und halte die technische Dokumentation aktuell.", title: "Für Recruiter", lede: "Frontend Engineer bei Sonnen seit April 2025, mit über 4 Jahren React und TypeScript.", facts: ["Sitz in Kairo, Erfahrung aus drei Remote-Rollen", "Arabisch als Muttersprache, Englisch auf Business-Niveau", "BBA, Ain-Shams-Universität, 2022"] },
+        lead: { also: "Ich übersetze Geschäftsanforderungen in technische Konzepte, treffe Architekturentscheidungen gemeinsam mit dem Produktteam und hebe die Qualität im Team durch Code-Reviews, Onboarding und Dokumentation.", title: "Für Engineering Leads", lede: "Ich verantworte Features von Anfang bis Ende: Architektur, Tests, Barrierefreiheit und Auslieferung.", facts: ["Unit-Test-Abdeckung von 70 % auf 89 % gesteigert", "Über 7 Apps im Alleingang zu AWS migriert", "Führt Code-Reviews durch und arbeitet Engineers ein"] },
+        designer: { also: "Ich übersetze Designabsichten gemeinsam mit dem Produktteam in technische Entscheidungen, prüfe Komponenten auf Barrierefreiheit und Konsistenz und dokumentiere sie, damit alle Engineers sie gleich umsetzen.", title: "Für Designer", lede: "Ich baue die Komponentenbibliotheken, über die Designs ausgeliefert werden, und teste sie mit Tastatur und Screenreader.", facts: ["Arbeitet am Designsystem des Unternehmens mit", "Leitet die Barrierefreiheit Richtung WCAG 2.x AA", "Storybook, Tailwind CSS und shadcn/ui"] }
+      },
+      projH: "La2eeto", projDim: "mein Nebenprojekt.",
+      projP: "Ein QR-Anhänger für alles, was du nicht verlieren willst. Wer etwas findet, scannt den Anhänger und erreicht den Besitzer, ganz ohne App. Kontaktdaten bleiben privat, bis der Besitzer den Verloren-Modus einschaltet.",
+      stageAria: "Ein La2eeto-QR-Anhänger und eine Beispiel-Scanseite auf Englisch und Arabisch", demo: "Demo",
+      projRole: "Von der Produktidee bis zum Produktionscode selbst entworfen und gebaut.",
+      f1: "Arabisch und Englisch, mit sauberer Rechts-nach-links-Unterstützung", f2: "Installierbare PWA mit Push-Benachrichtigungen",
+      f3: "Privatsphäre zuerst: Alles startet privat, und der Besitzer entscheidet, was die Seite zeigt", f4: "Eine barrierefreie Scanseite, die auch auf einfachen Smartphones läuft",
+      f5: "Eigene Design-Tokens und UI-Bibliothek, eine Web-App, eine API und eine serverseitig gerenderte Scanseite", builtWith: "Gebaut mit", projStatus: "Live", visit: "la2eeto.app öffnen",
+      expH: "Sechs Rollen", expDim: "seit 2021.", expP: "Von Freelance-Websites bis zu Produktteams bei einem Shell-Unternehmen, vieles davon remote.",
+      d1: "Apr. 2025 – heute", r1: "Frontend Engineer · Shell-Tochterunternehmen",
+      s1: "Verantworte Features von Anfang bis Ende: Architektur, Umsetzung, Tests und Barrierefreiheit",
+      s2: "Übersetze Geschäftsanforderungen mit Produkt und Stakeholdern in technische Konzepte",
+      s3: "Baue wiederverwendbare Komponentenbibliotheken und arbeite am Designsystem mit",
+      s4: "Habe die Impersonation-Funktion gebaut, die heute alle Kunden- und Partner-Apps nutzen",
+      s5: "Ladezeit um ~10 s gesenkt; Performance 52 → 83, SEO 50 → 100, Abdeckung 70 % → 89 %",
+      s6: "Über 7 Apps im Alleingang zu AWS migriert; Umzug von 10 Länderseiten zu Webflow geleitet",
+      s7: "Leite die Barrierefreiheit Richtung WCAG 2.x AA; führe Code-Reviews und Onboarding durch",
+      d2: "Okt. 2024 – März 2025", r2: "Frontend Developer · Remote", t2: "Responsives, skalierbares React-UI für das MVP gebaut, gemeinsam mit Backend, Design und Product Owner.",
+      d3: "Feb. 2024 – Sept. 2024", r3: "React Native Developer · Remote", t3: "Eine React-Native-App mit dem Backend-Team und dem Teamlead gebaut und gepflegt.",
+      d4: "Juli 2023 – Jan. 2024", r4: "Frontend Developer", t4: "Responsive Kundenwebsites mit Backend-Entwicklern und Designern gebaut.",
+      d5: "Apr. 2023 – Juni 2023", r5: "Frontend Developer Trainee", t5: "Dashboards und Formulare mit React und Material UI, Redux Toolkit, Formik, Yup und Chart.js.",
+      d6: "Jan. 2021 – Nov. 2022", freelance: "Freelance", r6: "Frontend Developer", t6: "Kundenprojekte mit HTML, CSS, JavaScript, Bootstrap und React umgesetzt.",
+      eduH: "Ausbildung", eduP: "Bachelor in Betriebswirtschaft, Ain-Shams-Universität (englischsprachiger Studiengang), 2018–2022. Note: Sehr gut.",
+      langH: "Sprachen", langP: "Arabisch: Muttersprache. Englisch: verhandlungssicher im Berufsalltag.",
+      skillsH: "Skills.", skillsP: "Womit ich arbeite, nach Aufgabe gruppiert.",
+      g1: "Frameworks und UI", g2: "Sprachen", g3: "State und Daten", g4: "Backend und Datenbanken", g5: "Tests und Qualität", g6: "Cloud, DevOps und Tools", g7: "Barrierefreiheit, SEO und Web", g8: "Integrationen und Analytics", g9: "Arbeitsweisen",
+      talk: "Lass uns reden", talkSr: ", schreib mir eine E-Mail", contactP: "Ich bin offen für Frontend-Rollen. Per E-Mail erreichst du mich am schnellsten.",
+      newTab: " (öffnet in neuem Tab)", foot: "Mohamed Abdel Hamid · Kairo, Ägypten",
+      impRegion: "Ansichtsbanner", impAs: "Ansicht als", impLong: " · diese Seite ist auf dich zugeschnitten", impExit: "Beenden",
+      copied: "E-Mail kopiert", selected: "E-Mail markiert. Mit Strg oder Cmd + C kopieren."
+    }
+  };
+
+  const root = document.documentElement;
+  const rm = matchMedia("(prefers-reduced-motion: reduce)");
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  const darkMq = matchMedia("(prefers-color-scheme: dark)");
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  let paused = store.get("ma-paused") === "1";
+  const still = () => paused || rm.matches;
+  let lang = "en", T = I18N.en, currentPersona = "everyone";
+  const cap = { everyone: "pEveryone", recruiter: "pRecruiter", lead: "pLead", designer: "pDesigner" };
+
+  /* ---------- Hero dot field ---------- */
+  const cv = document.getElementById("field"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, dots = [], mx = -9999, my = -9999, running = false, heroVisible = true;
+  let dotRGB = "70,76,91", hotRGB = "214,140,0";
+  const t0 = performance.now();
+  function readDotColors() {
+    const cs = getComputedStyle(root);
+    dotRGB = cs.getPropertyValue("--dot").trim() || dotRGB;
+    hotRGB = cs.getPropertyValue("--dot-hot").trim() || hotRGB;
+    if (W) draw(performance.now(), still());
+  }
+  function layout() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const gap = W < 600 ? 22 : 30; dots = [];
+    for (let y = gap / 2; y < H; y += gap) for (let x = gap / 2; x < W; x += gap) dots.push({ x, y, ox: 0, oy: 0, a: 0 });
+    draw(performance.now(), true);
+  }
+  function draw(now, staticFrame) {
+    ctx.clearRect(0, 0, W, H);
+    const t = (now - t0) / 1000;
+    for (const d of dots) {
+      const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy), R = 170;
+      const f = dist < R ? 1 - dist / R : 0;
+      const tx = f ? (dx / (dist || 1)) * f * 20 : 0, ty = f ? (dy / (dist || 1)) * f * 20 : 0;
+      d.ox += (tx - d.ox) * 0.12; d.oy += (ty - d.oy) * 0.12; d.a += (f - d.a) * 0.15;
+      const wave = staticFrame ? 0 : (Math.sin(d.x * 0.012 + t * 1.1) + Math.cos(d.y * 0.014 - t * 0.8)) * 0.5;
+      const fade = Math.min(1, (H - d.y) / (H * 0.55));
+      const base = Math.max(0, (0.24 + wave * 0.08) * fade);
+      if (d.a > 0.02) {
+        ctx.fillStyle = `rgba(${hotRGB},${Math.min(1, base + d.a)})`;
+        ctx.beginPath(); ctx.arc(d.x + d.ox, d.y + d.oy, 1.4 + d.a * 2, 0, 6.283); ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(${dotRGB},${base})`;
+        ctx.fillRect(d.x + d.ox - 0.9, d.y + d.oy - 0.9, 1.8, 1.8);
+      }
+    }
+  }
+  function loop(now) { if (still() || !heroVisible || document.hidden) { running = false; return; } draw(now); requestAnimationFrame(loop); }
+  function startField() { if (running || still() || !heroVisible) return; running = true; requestAnimationFrame(loop); }
+  new ResizeObserver(layout).observe(cv);
+  new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; startField(); }).observe(cv);
+  cv.parentElement.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
+  cv.parentElement.addEventListener("pointerleave", () => { mx = my = -9999; });
+  document.addEventListener("visibilitychange", startField);
+  rm.addEventListener?.("change", () => { if (!rm.matches) startField(); });
+
+  /* ---------- Theme ---------- */
+  const themeBtn = document.getElementById("themeBtn");
+  const resolved = () => root.dataset.theme || (darkMq.matches ? "dark" : "light");
+  function syncTheme() {
+    root.dataset.resolved = resolved();
+    themeBtn.setAttribute("aria-label", resolved() === "dark" ? T.themeToLight : T.themeToDark);
+    readDotColors();
+  }
+  const savedTheme = store.get("ma-theme");
+  if (savedTheme === "light" || savedTheme === "dark") root.dataset.theme = savedTheme;
+  themeBtn.addEventListener("click", () => {
+    const next = resolved() === "dark" ? "light" : "dark";
+    const apply = () => { root.dataset.theme = next; store.set("ma-theme", next); syncTheme(); };
+    if (!document.startViewTransition || still()) return apply();
+    const r = themeBtn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(apply).ready.then(() => {
+      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+        { duration: 620, easing: "cubic-bezier(0.77, 0, 0.175, 1)", pseudoElement: "::view-transition-new(root)" });
+    }).catch(() => {});
+  });
+  darkMq.addEventListener?.("change", syncTheme);
+
+  /* ---------- Pause motion (WCAG 2.2.2) ---------- */
+  const motionBtn = document.getElementById("motionBtn");
+  function syncMotion() {
+    root.classList.toggle("paused", paused);
+    motionBtn.setAttribute("aria-pressed", String(paused));
+    motionBtn.setAttribute("aria-label", paused ? T.motionOn : T.motion);
+  }
+  motionBtn.addEventListener("click", () => { paused = !paused; store.set("ma-paused", paused ? "1" : "0"); syncMotion(); if (!paused) startField(); });
+
+  /* ---------- Persona switcher ---------- */
+  const alsoText = document.getElementById("alsoText"), pTitle = document.getElementById("previewTitle"), pLede = document.getElementById("previewLede"), facts = document.getElementById("facts");
+  const bar = document.getElementById("impBar"), barName = document.getElementById("impName"), exit = document.getElementById("impExit");
+  const checkSvg = '<svg aria-hidden="true"><use href="#i-check-circle"/></svg>';
+  const settle = el => { if (!still() && el.animate) el.animate([{ filter: "blur(4px)", opacity: 0.3, transform: "translateY(6px)" }, { filter: "blur(0)", opacity: 1, transform: "none" }], { duration: 320, easing: "cubic-bezier(0.23, 1, 0.32, 1)" }); };
+  let hideTimer = 0;
+  function renderPersona(key, animate) {
+    const p = T.personas[key];
+    pTitle.textContent = p.title; pLede.textContent = p.lede;
+    alsoText.textContent = p.also;
+    facts.innerHTML = p.facts.map(() => `<li>${checkSvg}<span></span></li>`).join("");
+    facts.querySelectorAll("span").forEach((s, i) => (s.textContent = p.facts[i]));
+    if (animate) { settle(pLede); settle(facts); settle(alsoText); }
+  }
+  function choose(key) {
+    currentPersona = key; renderPersona(key, true);
+    clearTimeout(hideTimer);
+    if (key !== "everyone") {
+      barName.textContent = T[cap[key]]; bar.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => (bar.dataset.on = "true")));
+    } else {
+      bar.dataset.on = "false"; hideTimer = setTimeout(() => (bar.hidden = true), still() ? 0 : 260);
+    }
+  }
+  const personaBtns = [...document.querySelectorAll(".persona")];
+  const markPersona = key => personaBtns.forEach(x => x.setAttribute("aria-pressed", String(x.dataset.persona === key)));
+  personaBtns.forEach(x => x.addEventListener("click", () => { markPersona(x.dataset.persona); choose(x.dataset.persona); }));
+  exit.addEventListener("click", () => { markPersona("everyone"); choose("everyone"); document.getElementById("p-everyone").focus(); });
+
+  /* ---------- Language ---------- */
+  const nameA = document.getElementById("nameA"), nameB = document.getElementById("nameB");
+  function splitInto(el, text, start, byWord) {
+    el.textContent = "";
+    let n = start;
+    (byWord ? text.split(/(\s+)/) : [...text]).forEach(part => {
+      const s = document.createElement("span");
+      s.className = "ch"; s.style.setProperty("--i", n++); s.textContent = part;
+      el.appendChild(s);
+    });
+    return n;
+  }
+  function renderName() {
+    const byWord = lang === "ar"; // Arabic letters join, so animate whole words
+    const n = splitInto(nameA, T.nameA, 0, byWord);
+    const m = splitInto(nameB, T.nameB, n, byWord);
+    const dot = document.createElement("span"); dot.className = "ch dot"; dot.style.setProperty("--i", m); dot.textContent = ".";
+    nameB.appendChild(dot);
+    document.getElementById("hero-h").setAttribute("aria-label", T.name);
+  }
+  const roller = document.getElementById("roller");
+  let words = [], wi = 0;
+  function renderRoller() {
+    roller.textContent = ""; wi = 0;
+    words = T.roll.map((w, i) => { const s = document.createElement("span"); s.textContent = w; s.dataset.state = i ? "next" : "now"; roller.appendChild(s); return s; });
+  }
+  function setLang(next, animate) {
+    if (!I18N[next]) next = "en";
+    const doIt = () => {
+      lang = next; T = I18N[next];
+      root.lang = next; root.dir = next === "ar" ? "rtl" : "ltr";
+      document.querySelectorAll("[data-i18n]").forEach(el => { const v = T[el.dataset.i18n]; if (typeof v === "string") el.textContent = v; });
+      document.querySelectorAll("[data-i18n-aria]").forEach(el => { const v = T[el.dataset.i18nAria]; if (typeof v === "string") el.setAttribute("aria-label", v); });
+      document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
+      renderName(); renderRoller(); renderPersona(currentPersona, false); syncTheme(); syncMotion();
+      barName.textContent = T[cap[currentPersona]];
+      store.set("ma-lang", next);
+    };
+    if (animate && document.startViewTransition && !still()) document.startViewTransition(doIt); else doIt();
+  }
+  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang, true)));
+
+  /* Rolling word */
+  setInterval(() => {
+    if (still() || document.hidden || words.length < 2) return;
+    const cur = words[wi]; wi = (wi + 1) % words.length; const nx = words[wi];
+    cur.dataset.state = "prev";
+    nx.style.transition = "none"; nx.dataset.state = "next"; void nx.offsetHeight; nx.style.transition = "";
+    nx.dataset.state = "now";
+  }, 2600);
+
+  /* ---------- Marquee ---------- */
+  const row1 = ["React", "TypeScript", "Next.js", "React Native", "Tailwind CSS", "Storybook", "Vitest", "Cypress", "TanStack Query", "Zustand"];
+  const row2 = ["Node.js", "Terraform", "AWS", "Docker", "Kubernetes", "GitHub Actions", "Sentry", "PWA"];
+  const fill = (el, items) => {
+    const g = items.map((t, i) => `<span class="chip${i % 3 === 0 ? " hl" : ""}"><b></b>${t}</span>`).join("");
+    el.innerHTML = `<div class="marquee-group">${g}</div><div class="marquee-group">${g}</div>`;
+  };
+  fill(document.getElementById("mq1"), row1);
+  fill(document.getElementById("mq2"), row2);
+
+  /* ---------- Nav ---------- */
+  const navBar = document.getElementById("navBar");
+  const menuBtn = document.getElementById("menuBtn"), navLinks = document.getElementById("navLinks");
+  let menuOpen = false, lastY = scrollY;
+  const setMenu = v => { menuOpen = v; navLinks.classList.toggle("is-open", v); menuBtn.setAttribute("aria-expanded", String(v)); };
+  addEventListener("scroll", () => {
+    const y = scrollY;
+    navBar.classList.toggle("is-solid", y > 40);
+    navBar.classList.toggle("is-hidden", y > lastY && y > 400 && !menuOpen);
+    lastY = y;
+  }, { passive: true });
+  const links = [...navLinks.querySelectorAll("a")];
+  const sections = links.map(a => document.querySelector(a.getAttribute("href")));
+  const navIO = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    links.forEach(a => a.removeAttribute("aria-current"));
+    const a = links[sections.indexOf(e.target)]; if (a) a.setAttribute("aria-current", "true");
+  }), { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach(s => s && navIO.observe(s));
+  menuBtn.addEventListener("click", () => setMenu(!menuOpen));
+  navLinks.addEventListener("click", e => { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("click", e => { if (menuOpen && !e.target.closest(".nav")) setMenu(false); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (menuOpen) { setMenu(false); menuBtn.focus(); } else if (bar.dataset.on === "true") exit.click();
+  });
+
+  /* ---------- Cursor ---------- */
+  const cursor = document.getElementById("cursor"), glow = document.getElementById("glow");
+  let cx = -100, cy = -100, tx = -100, ty = -100, craf = 0;
+  function cursorLoop() {
+    cx += (tx - cx) * 0.22; cy += (ty - cy) * 0.22;
+    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    glow.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    craf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.3 ? requestAnimationFrame(cursorLoop) : 0;
+  }
+  addEventListener("pointermove", e => {
+    if (!fine.matches || e.pointerType !== "mouse") return;
+    tx = e.clientX; ty = e.clientY;
+    glow.classList.add("on");
+    if (!craf) craf = requestAnimationFrame(cursorLoop);
+  }, { passive: true });
+  document.addEventListener("pointerover", e => cursor.classList.toggle("is-hover", !!e.target.closest("a, button, label.persona")));
+  addEventListener("pointerdown", () => cursor.classList.add("is-down"));
+  addEventListener("pointerup", () => cursor.classList.remove("is-down"));
+  root.addEventListener("mouseleave", () => glow.classList.remove("on"));
+
+  /* Magnetic buttons */
+  document.querySelectorAll(".magnetic").forEach(el => {
+    el.addEventListener("pointermove", e => {
+      if (!fine.matches || still()) return;
+      const r = el.getBoundingClientRect();
+      el.style.transition = "transform 120ms ease-out";
+      el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
+    });
+    el.addEventListener("pointerleave", () => { el.style.transition = ""; el.style.transform = ""; });
+  });
+
+  /* ---------- Count-ups + gauge (final values are in the HTML) ---------- */
+  const ease = p => 1 - Math.pow(1 - p, 4);
+  const countIO = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return; countIO.unobserve(e.target);
+    if (still()) return;
+    const el = e.target, to = +el.dataset.count, from = +el.dataset.from, start = performance.now();
+    const step = now => { const p = Math.min(1, (now - start) / 1600); el.textContent = Math.round(from + (to - from) * ease(p)); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }), { threshold: 0.6 });
+  document.querySelectorAll("[data-count]").forEach(el => countIO.observe(el));
+  const gaugeNow = document.getElementById("gaugeNow");
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    if (!still() && gaugeNow.animate) gaugeNow.animate([{ strokeDasharray: "52 100" }, { strokeDasharray: "83 100" }], { duration: 1600, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
+  }, { threshold: 0.6 }).observe(gaugeNow);
+
+  /* ---------- La2eeto phone: alternate the English and Arabic pages ---------- */
+  const pages = [...document.querySelectorAll(".screen-page")];
+  let pi = 0;
+  setInterval(() => {
+    if (still() || document.hidden) return;
+    pages[pi].dataset.show = "false"; pi = (pi + 1) % pages.length; pages[pi].dataset.show = "true";
+  }, 3800);
+
+  /* ---------- Copy email + toast ---------- */
+  const email = "mohamedabdelhamid7895@gmail.com";
+  const toast = document.getElementById("toast"), toastText = document.getElementById("toastText");
+  let toastTimer = 0;
+  const showToast = msg => { toastText.textContent = msg; toast.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 2600); };
+  document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => {
+    const fallback = () => {
+      const el = document.getElementById("email"), r = document.createRange(); r.selectNodeContents(el);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); showToast(T.selected);
+    };
+    try { navigator.clipboard.writeText(email).then(() => showToast(T.copied), fallback); } catch (e) { fallback(); }
+  }));
+
+  /* ---------- Boot ---------- */
+  const fromHash = (location.hash || "").slice(1);
+  setLang(I18N[fromHash] ? fromHash : (store.get("ma-lang") || "en"), false);
+})();
+</script>
+
+</body>
+</html>
