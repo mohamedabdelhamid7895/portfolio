@@ -5,6 +5,7 @@ Personal portfolio of Mohamed Abdel Hamid, a frontend engineer in Cairo.
 A single static page, `index.html`, with no build step.
 
 - English, Arabic (right to left) and German
+- Downloadable CV (`Mohamed_Abdel_Hamid_CV.pdf`)
 - Light and dark themes, following the system setting with a manual toggle
 - Pause-motion control and reduced-motion support; keyboard and screen-reader friendly
 - Fonts from Google Fonts; everything else is inline
