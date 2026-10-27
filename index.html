@@ -9,28 +9,29 @@
 <meta name="description" content="Frontend engineer in Cairo building fast, accessible web apps with React and TypeScript.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: one lit stage in two themes. A live dot field behind a kinetic name,
-   flat colour blocks of results, a featured side project with a real QR tag, a timeline
+   a statement that fills as you scroll, titles on the left and quiet lists on the right, a featured side project with a real QR tag, a timeline
    that fills, and a closing call to talk. Amber is the only accent.
    Logical properties throughout so Arabic mirrors cleanly. */
 :root {
-  --bg: #faf9f7;
+  --bg: #f6f7fa;
   --surface: #ffffff;
-  --surface-2: #f0ede8;
-  --surface-3: #e4e0d9;
-  --tint: #f6e4d4;
-  --ink: #1a1a1a;
-  --muted: #4a4a47;
-  --dim: #6a6a66;
-  --accent: #ff5c00;
-  --accent-ink: #1a1a1a;
-  --accent-text: #b93d00;
+  --surface-2: #eaecf2;
+  --surface-3: #dbdee8;
+  --tint: #dde6ff;
+  --ink: #0b0c10;
+  --muted: #434957;
+  --dim: #626878;
+  --accent: #2b5bff;
+  --accent-ink: #ffffff;
+  --accent-text: #1d4ed8;
   --ok: #15803d;
-  --dot: 74, 74, 71;
-  --dot-hot: 255, 92, 0;
-  --glow: 255, 92, 0;
+  --dot: 67, 73, 87;
+  --dot-hot: 43, 91, 255;
+  --glow: 43, 91, 255;
+  --cta-accent: #6f98ff;
 
   --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --text: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -40,23 +41,23 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   --gutter: clamp(16px, 4vw, 56px);
-  --max: 1280px;
-  --section: clamp(112px, 14vw, 200px);
+  --max: 1120px;
+  --section: clamp(72px, 9vw, 128px);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #121110; --surface: #1b1a18; --surface-2: #262421; --surface-3: #34312c; --tint: #2e2118;
-    --ink: #f4f1ec; --muted: #b8b3aa; --dim: #9a948a;
-    --accent: #ff6a1f; --accent-text: #ff8a4c; --ok: #4ade80;
-    --dot: 184, 179, 170; --dot-hot: 255, 106, 31; --glow: 255, 106, 31;
+    --bg: #0a0b0f; --surface: #13151b; --surface-2: #1d2028; --surface-3: #292d38; --tint: #16213f;
+    --ink: #f1f3f8; --muted: #b4b9c6; --dim: #959bab;
+    --accent: #5b8cff; --accent-ink: #0a0a0a; --accent-text: #8aa9ff; --ok: #4ade80;
+    --dot: 180, 185, 198; --dot-hot: 91, 140, 255; --glow: 91, 140, 255; --cta-accent: #1d4ed8;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #121110; --surface: #1b1a18; --surface-2: #262421; --surface-3: #34312c; --tint: #2e2118;
-  --ink: #f4f1ec; --muted: #b8b3aa; --dim: #9a948a;
-  --accent: #ff6a1f; --accent-text: #ff8a4c; --ok: #4ade80;
-  --dot: 184, 179, 170; --dot-hot: 255, 106, 31; --glow: 255, 106, 31;
+  --bg: #0a0b0f; --surface: #13151b; --surface-2: #1d2028; --surface-3: #292d38; --tint: #16213f;
+  --ink: #f1f3f8; --muted: #b4b9c6; --dim: #959bab;
+  --accent: #5b8cff; --accent-ink: #0a0a0a; --accent-text: #8aa9ff; --ok: #4ade80;
+  --dot: 180, 185, 198; --dot-hot: 91, 140, 255; --glow: 91, 140, 255; --cta-accent: #1d4ed8;
   color-scheme: dark;
 }
 :root:lang(ar) {
@@ -126,16 +127,15 @@ button { font: inherit; color: inherit; }
 .paused .glow { display: none; }
 
 /* ---------- Nav ---------- */
-.nav-bar { position: fixed; inset: 0 0 auto; z-index: 50; padding-top: env(safe-area-inset-top, 0px); transition: transform 320ms var(--ease-drawer), background-color 240ms ease; }
-.nav-bar.is-solid { background: var(--bg); }
-.nav-bar.is-hidden:not(:focus-within) { transform: translateY(-110%); }
-.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 72px; }
+.nav-bar { position: fixed; inset: 0 0 auto; z-index: 50; padding-top: calc(12px + env(safe-area-inset-top, 0px)); padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); transition: transform 320ms var(--ease-drawer); pointer-events: none; }
+.nav-bar.is-hidden:not(:focus-within) { transform: translateY(-140%); }
+.nav { position: relative; pointer-events: auto; max-width: 1180px; margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 8px 10px 8px 14px; padding-inline: 14px 10px; border-radius: 999px; background: var(--surface-2); }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.03em; text-decoration: none; }
 :lang(ar) .wordmark { letter-spacing: 0; }
 .wordmark .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: "Bricolage Grotesque", sans-serif; font-size: 15px; letter-spacing: -0.04em; }
 .nav-links { display: flex; align-items: center; gap: 2px; }
 .nav-links a { display: block; padding: 10px 14px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 160ms ease, background-color 160ms ease; }
-.nav-links a[aria-current="true"] { color: var(--ink); background: var(--surface-2); }
+.nav-links a[aria-current="true"] { color: var(--ink); background: var(--surface-3); }
 @media (hover: hover) and (pointer: fine) { .nav-links a:hover { color: var(--ink); } }
 .nav-tools { display: flex; align-items: center; gap: 6px; }
 .icon-btn, .pill-btn {
@@ -144,24 +144,22 @@ button { font: inherit; color: inherit; }
   transition: transform 160ms var(--ease-out), background-color 160ms ease;
 }
 .icon-btn { padding: 0; }
+.nav .icon-btn { background: var(--surface-3); }
+@media (hover: hover) and (pointer: fine) { .nav .icon-btn:hover { background: var(--bg); } }
 .icon-btn:active, .pill-btn:active { transform: scale(0.96); }
 .icon-btn svg, .pill-btn svg { width: 18px; height: 18px; }
 @media (hover: hover) and (pointer: fine) { .icon-btn:hover, .pill-btn:hover { background: var(--surface-3); } }
-.pill-btn.solid { background: var(--ink); color: var(--bg); }
-@media (hover: hover) and (pointer: fine) { .pill-btn.solid:hover { background: var(--ink); opacity: 0.88; } }
+.pill-btn.solid { background: var(--accent); color: var(--accent-ink); }
+@media (hover: hover) and (pointer: fine) { .pill-btn.solid:hover { background: color-mix(in srgb, var(--accent) 86%, white); } }
 .theme-btn .sun, :root[data-resolved="dark"] .theme-btn .moon { display: none; }
 :root[data-resolved="dark"] .theme-btn .sun { display: block; }
 .motion-btn .on, .paused .motion-btn .off { display: none; }
 .paused .motion-btn .on { display: block; }
-.lang { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--surface-2); }
-.lang button { border: 0; background: transparent; min-height: 38px; min-width: 40px; padding: 0 10px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; transition: background-color 200ms ease, color 200ms ease; }
-.lang button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }
-.lang button[lang="ar"] { font-family: "IBM Plex Sans Arabic", sans-serif; }
 .menu-btn { display: none; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
 
 @media (max-width: 1180px) {
-  .nav-links { display: none; position: absolute; inset-inline: max(var(--gutter), env(safe-area-inset-left, 0px)); top: calc(76px + env(safe-area-inset-top, 0px)); flex-direction: column; align-items: stretch; gap: 4px; padding: 8px; border-radius: 20px; background: var(--surface); box-shadow: 0 24px 60px rgba(0,0,0,.25); } /* taste-skill-ignore: open menu floats */
+  .nav-links { display: none; position: absolute; inset-inline: 0; top: calc(100% + 8px); flex-direction: column; align-items: stretch; gap: 4px; padding: 8px; border-radius: 20px; background: var(--surface); box-shadow: 0 24px 60px rgba(0,0,0,.25); } /* taste-skill-ignore: open menu floats */
   .nav-links.is-open { display: flex; animation: menu-in 200ms var(--ease-out); transform-origin: top; }
   .nav-links a { font-size: 18px; padding: 14px 16px; border-radius: 14px; }
   .menu-btn { display: inline-flex; }
@@ -174,15 +172,18 @@ button { font: inherit; color: inherit; }
 @keyframes menu-in { from { opacity: 0; transform: scale(0.97) translateY(-6px); } }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; min-height: min(100svh, 980px); display: grid; align-items: end; padding-top: calc(120px + env(safe-area-inset-top, 0px)); padding-bottom: clamp(48px, 7vw, 96px); isolation: isolate; }
+.hero { position: relative; min-height: min(88svh, 820px); display: grid; align-items: end; padding-top: calc(120px + env(safe-area-inset-top, 0px)); padding-bottom: clamp(48px, 7vw, 96px); isolation: isolate; }
 .field { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; }
 .hero-inner { display: grid; gap: clamp(28px, 4vw, 48px); }
-.hero-status { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: var(--muted); }
-.hero h1 { font-size: clamp(3.25rem, 0.6rem + 11.2vw, 11rem); line-height: 0.86; letter-spacing: -0.055em; font-weight: 800; }
-:lang(ar) .hero h1 { letter-spacing: 0; line-height: 1.15; font-size: clamp(3rem, 0.6rem + 10vw, 9.5rem); }
+.hero-status { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 16px; color: var(--muted); }
+.hero-status .sep { color: var(--dim); }
+.hero-status time, .foot-row time, .widget time { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.hero h1 { font-size: clamp(3rem, 0.8rem + 8.2vw, 8.25rem); line-height: 0.9; letter-spacing: -0.045em; font-weight: 700; }
+:lang(ar) .hero h1 { letter-spacing: 0; line-height: 1.15; font-size: clamp(2.75rem, 0.8rem + 7.4vw, 7.25rem); }
 .hero h1 .line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 .hero h1 .ch { display: inline-block; white-space: pre; }
-.hero h1 .dot { color: var(--accent); }
+.hero h1 .line:last-child { text-align: end; color: var(--accent-text); }
+.hero h1 .dot { color: inherit; }
 .hero-foot { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px 48px; align-items: end; }
 .lede { font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem); line-height: 1.45; max-width: 36ch; }
 .roller { display: inline-grid; vertical-align: bottom; height: 1.45em; overflow: hidden; color: var(--accent-text); font-weight: 600; }
@@ -212,68 +213,70 @@ button { font: inherit; color: inherit; }
 @keyframes rise-in { from { transform: translateY(105%) rotate(5deg); } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(20px); filter: blur(6px); } }
 
-/* ---------- Marquee (decorative; always laid out left to right) ---------- */
-.marquee { direction: ltr; padding-block: 32px; overflow: hidden; background: var(--surface); }
-.marquee-track { display: flex; width: max-content; }
-.marquee-track.rev { margin-top: 14px; transform: translateX(-30%); }
-/* Rows slide with the reader's scroll, never on their own */
+/* ---------- Worked with ---------- */
+.worked { padding-block: clamp(40px, 6vw, 80px) 0; }
+.worked .wrap { display: grid; gap: 20px; justify-items: center; text-align: center; }
+.worked p { color: var(--muted); font-size: 16px; }
+.worked ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px clamp(28px, 6vw, 80px); }
+.worked li { font-family: var(--display); font-weight: 700; font-size: clamp(1.375rem, 0.9rem + 1.6vw, 2.25rem); letter-spacing: -0.03em; color: var(--dim); }
+
+/* ---------- Statement: fills in word by word as you scroll ---------- */
+.statement { padding-block: var(--section) 0; }
+.statement-text { font-family: var(--display); font-weight: 700; font-size: clamp(1.75rem, 1rem + 2.4vw, 3.25rem); line-height: 1.18; letter-spacing: -0.03em; max-width: 1040px; text-wrap: pretty; view-timeline-name: --st; }
+:lang(ar) .statement-text { letter-spacing: 0; line-height: 1.55; }
+.statement-text .hl { color: var(--accent-text); }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    html:not(.paused) .marquee-track { animation: drift linear both; animation-timeline: --mq; animation-range: cover 0% cover 100%; }
-    html:not(.paused) .marquee-track.rev { animation-name: drift-rev; }
+    html:not(.paused) .statement-text .wd { animation: wordfill linear both; animation-timeline: --st; animation-range: cover calc(4% + var(--k) * 30%) cover calc(10% + var(--k) * 30%); }
   }
 }
-.marquee { view-timeline-name: --mq; }
-.marquee-group { display: flex; gap: 12px; padding-right: 12px; }
-.chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 18px; border-radius: 999px; background: var(--surface-2); font-size: 16px; color: var(--muted); font-family: "Hanken Grotesk", sans-serif; }
-.chip b { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.chip.hl { color: var(--ink); background: var(--surface-3); }
-@keyframes drift { from { transform: translateX(0); } to { transform: translateX(-30%); } }
-@keyframes drift-rev { from { transform: translateX(-30%); } to { transform: translateX(0); } }
+@keyframes wordfill { from { opacity: 0.18; } }
 
-/* ---------- Section heads ---------- */
+/* ---------- Section layout: title on the left, content on the right ---------- */
 .section { padding-block: var(--section); }
-.head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: 24px 48px; align-items: end; margin-bottom: clamp(48px, 7vw, 96px); }
-.head h2 { font-size: clamp(2.75rem, 1rem + 5.6vw, 6.5rem); line-height: 0.92; letter-spacing: -0.045em; font-weight: 800; }
-:lang(ar) .head h2 { letter-spacing: 0; line-height: 1.15; }
-.head h2 .dim { color: var(--dim); }
-.head p { color: var(--muted); font-size: 19px; max-width: 46ch; }
+.split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 28px clamp(24px, 5vw, 80px); align-items: start; }
+.side { position: sticky; top: 104px; display: grid; gap: 12px; align-content: start; }
+.side h2 { font-family: var(--display); font-size: clamp(1.625rem, 1.1rem + 1.1vw, 2.25rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; }
+:lang(ar) .side h2 { letter-spacing: 0; line-height: 1.3; }
+.side p { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 32ch; }
+.main { min-width: 0; }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     html:not(.paused) .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
     html:not(.paused) .reveal-2 { animation: reveal linear both; animation-timeline: view(); animation-range: entry 10% entry 80%; }
-    html:not(.paused) .head h2 { animation: wipe linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
   }
 }
-@keyframes reveal { from { opacity: 0; transform: translateY(48px) scale(0.98); filter: blur(8px); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); } }
-@keyframes wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(40px); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); } to { clip-path: inset(0 0 -10% 0); } }
+@keyframes reveal { from { opacity: 0; transform: translateY(32px); filter: blur(6px); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); } }
 
-/* ---------- Tiles ---------- */
-.tile { position: relative; overflow: hidden; border-radius: 28px; background: var(--surface); padding: clamp(24px, 3vw, 40px); display: grid; gap: 14px; align-content: space-between; }
-.tile h3 { font-family: var(--text); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
-.tile p { color: var(--muted); font-size: 16px; max-width: 40ch; }
+/* ---------- About: a short lead and a plain list of facts ---------- */
+.about-lead { font-size: clamp(1.25rem, 1rem + 0.7vw, 1.5rem); line-height: 1.45; letter-spacing: -0.015em; font-weight: 500; max-width: 38ch; text-wrap: pretty; }
+.facts-list { margin: 28px 0 0; display: grid; gap: 2px; }
+.facts-list > div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 16px; padding: 14px 16px; margin-inline: -16px; border-radius: 14px; transition: background-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .facts-list > div:hover { background: var(--surface-2); } }
+.facts-list dt { color: var(--muted); font-size: 15px; }
+.facts-list dd { margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink); }
+.facts-list time { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; display: inline-block; }
 
-/* What I added: flat colour blocks, no figures */
-.wins { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
-.win { position: relative; overflow: hidden; border-radius: 28px; padding: clamp(24px, 3vw, 40px); display: grid; gap: 20px; align-content: space-between; min-height: 260px; background: var(--surface); color: var(--ink); }
-.win h3 { font-family: var(--display); font-weight: 800; font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3.25rem); line-height: 1; letter-spacing: -0.04em; text-wrap: balance; }
-:lang(ar) .win h3 { letter-spacing: 0; line-height: 1.3; }
-.win p { font-size: 17px; line-height: 1.5; max-width: 38ch; color: var(--muted); }
-.w7 { grid-column: span 7; } .w5 { grid-column: span 5; } .w4 { grid-column: span 4; } .w12 { grid-column: span 12; }
-.win.accent { background: var(--accent); color: var(--accent-ink); }
-.win.accent p { color: var(--accent-ink); }
-.win.soft { background: var(--surface-2); }
-.win.tint { background: var(--tint); }
-.win.tint p { color: var(--ink); }
-.win.ink { background: var(--ink); color: var(--bg); min-height: 0; }
-.win.ink p { color: var(--bg); font-family: var(--display); font-weight: 500; font-size: clamp(1.375rem, 1rem + 1.2vw, 2.25rem); line-height: 1.3; letter-spacing: -0.02em; max-width: 44ch; }
-:lang(ar) .win.ink p { letter-spacing: 0; line-height: 1.6; }
+/* ---------- Selected work: compact rows with a small icon ---------- */
+.work-list { display: grid; gap: 2px; }
+.work-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 4px 16px; align-items: start; padding: 14px 16px; margin-inline: -16px; border-radius: 16px; transition: background-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .work-row:hover { background: var(--surface-2); } }
+.ico { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--surface-2); color: var(--ink); transition: transform 300ms var(--ease-out); }
+.ico svg { width: 22px; height: 22px; }
+.ico.accent { background: var(--accent); color: var(--accent-ink); }
+.ico.tint { background: var(--tint); }
+.ico.ink { background: var(--ink); color: var(--bg); }
+@media (hover: hover) and (pointer: fine) { .work-row:hover .ico { transform: rotate(-6deg) scale(1.06); } }
+.work-main h3 { font-family: var(--text); font-size: 17px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; }
+.work-main p { color: var(--muted); font-size: 15px; line-height: 1.5; margin-top: 2px; max-width: 52ch; }
+.work-meta { color: var(--dim); font-size: 14px; padding-top: 2px; white-space: nowrap; }
+.work-list .ico, .work-main { grid-row: 1; }
 
 /* ---------- Project: La2eeto ---------- */
-.project { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
-.project-stage { position: relative; min-height: 560px; border-radius: 32px; background: #0f2433; overflow: hidden; isolation: isolate; color: #fdfcf9; display: flex; align-items: center; justify-content: center; gap: clamp(36px, 6vw, 88px); padding: 64px 24px; }
-.tag, .phone { flex: none; }
+.project { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.project-stage { position: relative; min-height: 460px; border-radius: 28px; background: #0f2433; overflow: hidden; isolation: isolate; color: #fdfcf9; display: flex; align-items: center; justify-content: center; gap: clamp(28px, 5vw, 72px); padding: 48px 24px; }
+.tag, .phone { flex: none; zoom: 0.82; }
 .tag {
   position: relative; width: 210px; padding: 18px; border-radius: 26px; background: #fdfcf9; color: #0f2433;
   display: grid; gap: 12px; justify-items: center; rotate: -8deg; animation: bob 6s var(--ease-in-out) infinite alternate;
@@ -311,7 +314,7 @@ button { font: inherit; color: inherit; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; direction: ltr; }
 [dir="rtl"] .chips { justify-content: flex-end; }
 .chips li { font-size: 14px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; }
-.tile .status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 15px; color: var(--muted); }
+.status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 15px; color: var(--muted); }
 .status-line .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-weight: 600; }
 .project-text .visit { justify-self: start; min-height: 48px; padding: 0 22px; font-size: 16px; }
 .visit svg { transition: translate 240ms var(--ease-out); }
@@ -319,71 +322,68 @@ button { font: inherit; color: inherit; }
 .status-line .pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 
 /* ---------- Experience ---------- */
-.timeline { position: relative; view-timeline-name: --tl; }
-.timeline::before, .timeline .fill { content: ""; position: absolute; inset-inline-start: 7px; top: 14px; bottom: 14px; width: 2px; border-radius: 2px; }
-.timeline::before { background: var(--surface-3); }
-.timeline .fill { background: var(--accent); transform-origin: top; }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    html:not(.paused) .timeline .fill { animation: fill-y linear both; animation-timeline: --tl; animation-range: entry 50% exit 60%; }
-  }
-}
-@keyframes fill-y { from { transform: scaleY(0); } }
-.timeline-list { display: grid; gap: 6px; }
-.job { position: relative; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px 40px; padding-block: 28px; padding-inline: 52px 28px; border-radius: 24px; transition: background-color 240ms ease, opacity 240ms ease; }
-.job::before { content: ""; position: absolute; inset-inline-start: 1px; top: 37px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface-3); transition: background-color 200ms ease; }
-.job.current::before { background: var(--accent); }
+.timeline-list { display: grid; gap: 2px; }
+.job { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 6px 24px; padding: 20px 16px; margin-inline: -16px; border-radius: 18px; transition: background-color 240ms ease, opacity 240ms ease; }
 @media (hover: hover) and (pointer: fine) {
-  .timeline-list:hover .job { opacity: 0.45; }
-  .timeline-list:hover .job:hover { opacity: 1; background: var(--surface); }
-  .timeline-list .job:hover::before { background: var(--accent); }
+  .timeline-list:hover .job { opacity: 0.5; }
+  .timeline-list:hover .job:hover { opacity: 1; background: var(--surface-2); }
 }
-.job .when { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; padding-top: 6px; }
-.job h3 { font-size: clamp(1.5rem, 1.1rem + 1vw, 2.125rem); letter-spacing: -0.03em; line-height: 1.15; }
-:lang(ar) .job h3 { letter-spacing: 0; line-height: 1.35; }
-.job .role { color: var(--accent-text); font-size: 16px; font-weight: 600; margin-top: 4px; }
-.job .did { color: var(--muted); margin-top: 10px; max-width: 64ch; }
+.timeline-list:focus-within .job { opacity: 1; }
+.job .when { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; padding-top: 3px; }
+.job h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+:lang(ar) .job h3 { letter-spacing: 0; }
+.job .role { color: var(--accent-text); font-size: 15px; font-weight: 600; margin-top: 2px; }
+.job .headline { margin-top: 10px; color: var(--ink); font-weight: 500; font-size: 16px; line-height: 1.5; max-width: 54ch; }
+.job .did { color: var(--muted); font-size: 15px; line-height: 1.55; margin-top: 8px; max-width: 58ch; }
 .job ul.did { display: grid; gap: 6px; }
-.job ul.did li { display: grid; grid-template-columns: 16px minmax(0, 1fr); }
-.job ul.did li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--dim); margin-top: 12px; }
-.extras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
-.extras .tile { align-content: start; }
-.extras .tile p { color: var(--ink); font-size: 19px; }
+.job ul.did li { display: grid; grid-template-columns: 14px minmax(0, 1fr); }
+.job ul.did li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--dim); margin-top: 9px; }
+.job .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; direction: ltr; }
+[dir="rtl"] .job .tags { justify-content: flex-end; }
+.job .tags li { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; }
+@media (hover: hover) and (pointer: fine) { .job:hover .tags li { background: var(--surface); } }
 
-/* ---------- Skills ---------- */
-.kit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.kit .tile { align-content: start; gap: 18px; }
-.kit ul { display: flex; flex-wrap: wrap; gap: 8px; direction: ltr; }
-[dir="rtl"] .kit ul { justify-content: flex-end; }
-.kit li { font-size: 15px; padding: 7px 13px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out); }
-@media (hover: hover) and (pointer: fine) { .kit li:hover { background: var(--accent); color: var(--accent-ink); transform: translateY(-2px); } }
-.kit .wide { grid-column: span 2; }
+/* ---------- Skills: a label and its tools on one line ---------- */
+.skill-rows { display: grid; gap: 2px; }
+.skill-row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 8px 24px; padding: 16px; margin-inline: -16px; border-radius: 16px; transition: background-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .skill-row:hover { background: var(--surface-2); } }
+.skill-row h3 { font-family: var(--text); font-size: 15px; font-weight: 600; color: var(--muted); line-height: 1.7; }
+.skill-row ul { display: flex; flex-wrap: wrap; gap: 6px; direction: ltr; }
+[dir="rtl"] .skill-row ul { justify-content: flex-end; }
+.skill-row li { font-size: 14px; padding: 4px 11px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-family: "Hanken Grotesk", sans-serif; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .skill-row li:hover { background: var(--accent); color: var(--accent-ink); transform: translateY(-1px); } }
 
-/* ---------- Contact ---------- */
-.contact { padding-block: var(--section) 40px; }
-.contact-big { font-weight: 800; font-size: clamp(3.5rem, 0.5rem + 13vw, 13rem); line-height: 0.92; letter-spacing: -0.06em; }
+/* ---------- Contact: dark call-to-action block ---------- */
+.contact { padding-block: 24px 40px; }
+.cta { background: var(--ink); color: var(--bg); border-radius: 32px; padding: clamp(28px, 5vw, 64px); }
+.cta :focus-visible { outline-color: var(--cta-accent); }
+.contact-big { font-weight: 700; font-size: clamp(2.5rem, 0.6rem + 6.4vw, 6.5rem); line-height: 0.98; letter-spacing: -0.045em; }
 :lang(ar) .contact-big { letter-spacing: 0; line-height: 1.25; }
-:lang(de) .contact-big { font-size: clamp(3rem, 0.5rem + 10vw, 10rem); }
+:lang(de) .contact-big { font-size: clamp(2.25rem, 0.6rem + 5.4vw, 5.5rem); }
 .contact-big a { text-decoration: none; display: inline-flex; align-items: center; gap: 0.12em; }
 .contact-big .w { display: inline-block; transition: transform 500ms var(--ease-out), color 300ms ease; }
-.contact-big .arrow { width: 0.62em; height: 0.62em; color: var(--accent-text); flex: none; transition: rotate 500ms var(--ease-out); }
+.contact-big .arrow { width: 0.62em; height: 0.62em; color: var(--cta-accent); flex: none; transition: rotate 500ms var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  .contact-big a:hover .w { color: var(--accent-text); transform: translateY(-0.05em); }
+  .contact-big a:hover .w { color: var(--cta-accent); transform: translateY(-0.05em); }
   .contact-big a:hover .arrow { rotate: 45deg; }
 }
-.contact-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; margin-top: clamp(48px, 7vw, 96px); align-items: start; }
-.contact-row > p { color: var(--muted); font-size: 20px; max-width: 40ch; }
+.contact-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; margin-top: clamp(40px, 6vw, 80px); align-items: start; }
+.contact-row > p { color: color-mix(in srgb, var(--bg) 80%, transparent); font-size: 20px; max-width: 40ch; }
 .links { display: grid; gap: 8px; }
-.links > * { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 22px; border-radius: 20px; background: var(--surface); }
+.links > * { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 22px; border-radius: 20px; background: color-mix(in srgb, var(--bg) 12%, transparent); color: var(--bg); }
 .links a.row-link { text-decoration: none; font-size: 20px; font-weight: 600; transition: background-color 160ms ease; }
-.links a.row-link svg { width: 20px; height: 20px; color: var(--muted); transition: translate 240ms var(--ease-out), color 160ms ease; }
+.links a.row-link svg { width: 20px; height: 20px; color: color-mix(in srgb, var(--bg) 70%, transparent); transition: translate 240ms var(--ease-out), color 160ms ease; }
 @media (hover: hover) and (pointer: fine) {
-  .links a.row-link:hover { background: var(--surface-2); }
-  .links a.row-link:hover svg { translate: 3px -3px; color: var(--accent-text); }
+  .links a.row-link:hover { background: color-mix(in srgb, var(--bg) 22%, transparent); }
+  .links a.row-link:hover svg { translate: 3px -3px; color: var(--cta-accent); }
   [dir="rtl"] .links a.row-link:hover svg { translate: -3px -3px; }
 }
+.cta .pill-btn.solid { background: var(--accent); color: var(--accent-ink); }
 .email { font-size: 18px; font-weight: 600; word-break: break-all; user-select: all; direction: ltr; }
-.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 72px; font-size: 14px; color: var(--dim); }
+.foot-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; padding-top: 40px; font-size: 15px; color: var(--muted); }
+.foot-row nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.foot-row nav a { color: var(--ink); text-decoration: none; font-weight: 500; }
+@media (hover: hover) and (pointer: fine) { .foot-row nav a:hover { color: var(--accent-text); text-decoration: underline; } }
 
 /* ---------- Toast ---------- */
 .toast {
@@ -398,27 +398,23 @@ button { font: inherit; color: inherit; }
 .btn svg.dl, .pill-btn svg.dl { width: 18px; height: 18px; }
 
 /* ---------- Responsive ---------- */
-@media (min-width: 1001px) and (max-width: 1320px) { .tag, .phone { zoom: 0.78; } .project-stage { padding-inline: 12px; gap: 40px; } }
-@media (max-width: 1000px) {
-  .wins { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .w7, .w5, .w4 { grid-column: span 3; }
-  .w12 { grid-column: span 6; }
-  .project { grid-template-columns: minmax(0, 1fr); }
-  .kit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 901px) and (max-width: 1180px) { .tag, .phone { zoom: 0.66; } .project-stage { padding-inline: 12px; gap: 24px; } }
+@media (max-width: 900px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; }
+  .side p { max-width: 52ch; }
 }
 @media (max-width: 760px) {
   body { font-size: 17px; }
-  .hero-foot, .head, .contact-row { grid-template-columns: minmax(0, 1fr); }
+  .hero-foot, .contact-row { grid-template-columns: minmax(0, 1fr); }
   .hero-actions { justify-self: start; }
-  .wins { grid-template-columns: minmax(0, 1fr); }
-  .w7, .w5, .w4, .w12 { grid-column: auto; }
-  .win { min-height: 0; }
-  .extras, .kit { grid-template-columns: minmax(0, 1fr); }
-  .kit .wide { grid-column: auto; }
-  .job { grid-template-columns: minmax(0, 1fr); padding-block: 22px; padding-inline: 40px 8px; }
-  .job::before { top: 29px; }
-  .project-stage { min-height: 0; padding: 44px 12px; gap: 22px; }
+  .facts-list > div, .skill-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .work-row { grid-template-columns: 44px minmax(0, 1fr); }
+  .work-meta { grid-column: 2; padding-top: 0; }
+  .job { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .project-stage { min-height: 0; padding: 40px 12px; gap: 22px; }
   .tag, .phone { zoom: 0.56; }
+  .cta { border-radius: 28px; }
 }
 
 /* ---------- Reduced motion / paused ---------- */
@@ -433,6 +429,15 @@ button { font: inherit; color: inherit; }
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="a-speed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17a8.5 8.5 0 1 1 17 0"/><path d="m12 17 4.2-5.2"/><circle cx="12" cy="17" r="1.1"/></symbol>
+  <symbol id="a-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></symbol>
+  <symbol id="a-test" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.5v5.8c0 4.6 3.1 8.6 7.5 10.2 4.4-1.6 7.5-5.6 7.5-10.2V5.5L12 2.5Z"/><path d="m8.6 12 2.4 2.4 4.6-4.8"/></symbol>
+  <symbol id="a-access" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.9"/><path d="M5 8.5c4.7 1.3 9.3 1.3 14 0M12 9v5.5M8.5 21l3.5-6.5 3.5 6.5"/></symbol>
+  <symbol id="a-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6"/><path d="M13.5 8h7l-2.4-2.4M20.5 16h-7l2.4 2.4"/></symbol>
+  <symbol id="a-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 18.5h11a4.2 4.2 0 0 0 .6-8.3A6.2 6.2 0 0 0 6 9.6a4.5 4.5 0 0 0 .5 8.9Z"/></symbol>
+  <symbol id="a-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 2.5 4.2 5.5 4.2 9s-1.4 6.5-4.2 9c-2.8-2.5-4.2-5.5-4.2-9S9.2 5.5 12 3Z"/></symbol>
+  <symbol id="a-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h10a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3V4.5Z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></symbol>
+  <symbol id="a-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.4c3 0 5.5 1.8 5.5 5.6"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
   <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7L16 9.7"/></symbol>
@@ -453,21 +458,16 @@ button { font: inherit; color: inherit; }
 <div class="cursor" id="cursor" aria-hidden="true"></div>
 
 <header class="nav-bar" id="navBar">
-  <nav class="wrap nav" data-i18n-aria="navLabel" aria-label="Main">
+  <nav class="nav" data-i18n-aria="navLabel" aria-label="Main">
     <a class="wordmark" href="#top" data-i18n-aria="home" aria-label="Mohamed Abdel Hamid, back to top"><span class="mark" aria-hidden="true">MA</span><span aria-hidden="true" data-i18n="first">Mohamed</span></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#impact" data-i18n="navImpact">Impact</a></li>
-      <li><a href="#project" data-i18n="navProject">La2eeto</a></li>
+      <li><a href="#about" data-i18n="navAbout">About</a></li>
+      <li><a href="#work" data-i18n="navWork">Work</a></li>
       <li><a href="#experience" data-i18n="navExp">Experience</a></li>
       <li><a href="#skills" data-i18n="navSkills">Skills</a></li>
       <li><a href="#contact" data-i18n="navContact">Contact</a></li>
     </ul>
     <div class="nav-tools">
-      <div class="lang" role="group" data-i18n-aria="langLabel" aria-label="Language">
-        <button type="button" lang="en" data-lang="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" lang="ar" data-lang="ar" aria-pressed="false" aria-label="العربية">ع</button>
-        <button type="button" lang="de" data-lang="de" aria-pressed="false" aria-label="Deutsch">DE</button>
-      </div>
       <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch to dark theme"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button>
       <button class="icon-btn motion-btn" id="motionBtn" type="button" aria-pressed="false" aria-label="Pause animations"><svg class="off" aria-hidden="true"><use href="#i-pause"/></svg><svg class="on" aria-hidden="true"><use href="#i-play"/></svg></button>
       <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks" data-i18n-aria="menu" aria-label="Menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
@@ -480,7 +480,7 @@ button { font: inherit; color: inherit; }
   <section class="hero" id="top" aria-labelledby="hero-h">
     <canvas class="field" id="field" aria-hidden="true"></canvas>
     <div class="wrap hero-inner">
-      <p class="hero-status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="status">Frontend Engineer at Sonnen, a Shell subsidiary · Cairo</span></p>
+      <p class="hero-status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="status">Frontend Engineer at Sonnen, a Shell subsidiary</span><span class="sep" aria-hidden="true">·</span><span><span data-i18n="cairo">Cairo</span> <time data-clock>--:--</time></span></p>
       <h1 id="hero-h" aria-label="Mohamed Abdel Hamid"><span class="line" aria-hidden="true" id="nameA">Mohamed</span><span class="line" aria-hidden="true" id="nameB">Abdel Hamid</span></h1>
       <div class="hero-foot">
         <p class="lede">
@@ -495,147 +495,278 @@ button { font: inherit; color: inherit; }
     </div>
   </section>
 
-  <section class="marquee" data-i18n-aria="techLabel" aria-label="Technologies I work with">
-    <p class="sr-only">React, TypeScript, Next.js, React Native, Tailwind CSS, Storybook, Vitest, Cypress, TanStack Query, Zustand, Node.js, Terraform, AWS, Docker, Kubernetes, GitHub Actions, Sentry, PWA.</p>
-    <div aria-hidden="true"><div class="marquee-track" id="mq1"></div><div class="marquee-track rev" id="mq2"></div></div>
+  <section class="worked" aria-labelledby="focus-h">
+    <div class="wrap">
+      <p id="focus-h" data-i18n="focusH">What I focus on</p>
+      <ul><li data-i18n="fo1">Component libraries</li><li data-i18n="fo2">Frontend architecture</li><li data-i18n="fo3">Web performance</li><li data-i18n="fo4">Accessibility</li><li data-i18n="fo5">Design systems</li></ul>
+    </div>
   </section>
 
-  <section class="wrap section" id="impact" aria-labelledby="impact-h">
-    <div class="head">
-      <h2 id="impact-h"><span data-i18n="impactH">What I added</span> <span class="dim" data-i18n="impactDim">at Sonnen.</span></h2>
-      <p class="reveal" data-i18n="impactP">Since April 2025 I've owned features end to end and improved what matters: speed, search visibility and confidence in the tests.</p>
+  <section class="wrap statement" aria-label="Summary">
+    <p class="statement-text" id="statement">I build interfaces that load fast, work for everyone and stay easy to maintain. I own features end to end, make architecture calls with product, and raise the bar through reviews, onboarding and documentation.</p>
+  </section>
+
+  <section class="wrap section" id="about" aria-labelledby="about-h">
+    <div class="split">
+      <div class="side">
+        <h2 id="about-h" data-i18n="aboutT">About</h2>
+        <p data-i18n="aboutP">The practical details: where I'm based, where I studied and what I'm working on now.</p>
+      </div>
+      <div class="main">
+        <p class="about-lead reveal" data-i18n="aboutBody">Frontend engineer based in Cairo. At Sonnen I own production features end to end, drive frontend architecture decisions with product, and build reusable component libraries for the design system.</p>
+        <dl class="facts-list reveal-2">
+          <div><dt data-i18n="lblBased">Based in</dt><dd><span data-i18n="wLocH">Cairo, Egypt</span> · <time data-clock>--:--</time></dd></div>
+          <div><dt data-i18n="lblNow">Now</dt><dd data-i18n="valNow">Frontend Engineer at Sonnen GmbH, a Shell subsidiary, since April 2025</dd></div>
+          <div><dt data-i18n="lblStudied">Studied</dt><dd data-i18n="valEdu">Ain Shams University, Bachelor of Business Administration (English Section), 2018–2022</dd></div>
+          <div><dt data-i18n="lblLang">Languages</dt><dd><span data-i18n="wLangA">Arabic, native</span> · <span data-i18n="wLangE">English, professional working proficiency</span></dd></div>
+        </dl>
+      </div>
     </div>
-    <div class="wins">
-      <article class="win w7 accent reveal"><h3 data-i18n="w1h">Faster to load</h3><p data-i18n="w1p">Cut the application's load time by a wide margin and lifted its performance score.</p></article>
-      <article class="win w5 soft reveal-2"><h3 data-i18n="w2h">Found by search</h3><p data-i18n="w2p">Took the SEO score to the maximum, alongside the performance work.</p></article>
-      <article class="win w4 soft reveal"><h3 data-i18n="w3h">Better tested</h3><p data-i18n="w3p">Raised unit test coverage, so the team ships with confidence.</p></article>
-      <article class="win w4 reveal-2"><h3 data-i18n="w4h">Accessible</h3><p data-i18n="w4p">Leading the accessibility work toward WCAG AA: semantic HTML, ARIA and screen-reader testing.</p></article>
-      <article class="win w4 tint reveal"><h3 data-i18n="w5h">One tool, every customer and partner app</h3><p data-i18n="w5p">Built and own the user impersonation feature used across all customer and partner apps.</p></article>
-      <article class="win w5 tint reveal-2"><h3 data-i18n="w6h">Moved to AWS, on my own</h3><p data-i18n="w6p">Migrated the department's web applications to AWS single-handedly, with the infrastructure managed as code.</p></article>
-      <article class="win w7 soft reveal"><h3 data-i18n="w7h">Country sites on Webflow</h3><p data-i18n="w7p">Led the frontend migration of the corporate sites for each country.</p></article>
-      <article class="win w12 ink reveal"><p data-i18n="w8p">I own the technical direction of what I build. I make architecture calls with product and stakeholders, review code, onboard engineers and document the decisions so the team keeps moving.</p></article>
+  </section>
+
+  <section class="wrap section" id="work" aria-labelledby="work-h" style="padding-top:0">
+    <div class="split">
+      <div class="side">
+        <h2 id="work-h" data-i18n="workH">Selected work</h2>
+        <p data-i18n="impactP">Since April 2025 I've owned features end to end and improved what matters: speed, search visibility and confidence in the tests.</p>
+      </div>
+      <div class="main">
+        <ul class="work-list">
+          <li class="work-row reveal">
+            <span class="ico accent" aria-hidden="true"><svg><use href="#a-speed"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w1h">Faster to load</h3><p data-i18n="w1p">Cut the application's load time by a wide margin and lifted its performance score.</p></div>
+            <span class="work-meta" data-i18n="c1k">Performance</span>
+          </li>
+          <li class="work-row reveal-2">
+            <span class="ico" aria-hidden="true"><svg><use href="#a-search"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w2h">Found by search</h3><p data-i18n="w2p">Took the SEO score to the maximum, alongside the performance work.</p></div>
+            <span class="work-meta" data-i18n="c2k">Search</span>
+          </li>
+          <li class="work-row reveal">
+            <span class="ico tint" aria-hidden="true"><svg><use href="#a-test"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w3h">Better tested</h3><p data-i18n="w3p">Raised unit test coverage, so the team ships with confidence.</p></div>
+            <span class="work-meta" data-i18n="c3k">Quality</span>
+          </li>
+          <li class="work-row reveal-2">
+            <span class="ico ink" aria-hidden="true"><svg><use href="#a-access"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w4h">Accessible</h3><p data-i18n="w4p">Leading the accessibility work toward WCAG AA: semantic HTML, ARIA and screen-reader testing.</p></div>
+            <span class="work-meta" data-i18n="c4k">Accessibility</span>
+          </li>
+          <li class="work-row reveal">
+            <span class="ico" aria-hidden="true"><svg><use href="#a-switch"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w5h">One tool, every customer and partner app</h3><p data-i18n="w5p">Built and own the user impersonation feature used across all customer and partner apps.</p></div>
+            <span class="work-meta" data-i18n="c5k">Platform</span>
+          </li>
+          <li class="work-row reveal-2">
+            <span class="ico tint" aria-hidden="true"><svg><use href="#a-cloud"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w6h">Moved to AWS, on my own</h3><p data-i18n="w6p">Migrated the department's web applications to AWS single-handedly, with the infrastructure managed as code.</p></div>
+            <span class="work-meta" data-i18n="c6k">Cloud</span>
+          </li>
+          <li class="work-row reveal">
+            <span class="ico accent" aria-hidden="true"><svg><use href="#a-globe"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w7h">Country sites on Webflow</h3><p data-i18n="w7p">Led the frontend migration of the corporate sites for each country.</p></div>
+            <span class="work-meta" data-i18n="c7k">Migration</span>
+          </li>
+          <li class="work-row reveal">
+            <span class="ico tint" aria-hidden="true"><svg><use href="#a-book"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w9h">Our department's docs hub</h3><p data-i18n="w9p">Took the initiative to create the department's documentation hub, and implemented it.</p></div>
+            <span class="work-meta" data-i18n="c9k">Documentation</span>
+          </li>
+          <li class="work-row reveal-2">
+            <span class="ico" aria-hidden="true"><svg><use href="#a-team"/></svg></span>
+            <div class="work-main"><h3 data-i18n="w8h">Raising the team's bar</h3><p data-i18n="w8p">Code reviews, onboarding for new engineers, technical documentation, and turning business requirements into technical designs with product.</p></div>
+            <span class="work-meta" data-i18n="c8k">Team</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="wrap section" id="project" aria-labelledby="project-h" style="padding-top:0">
-    <div class="head">
-      <h2 id="project-h"><span data-i18n="projH">La2eeto</span> <span class="dim" data-i18n="projDim">my side project.</span></h2>
-      <p class="reveal" data-i18n="projP">A QR tag for anything you'd hate to lose. Whoever finds it scans the tag and reaches the owner, with no app to install. Contact details stay private until the owner turns on Lost Mode.</p>
-    </div>
-    <div class="project">
-      <div class="project-stage reveal" role="img" data-i18n-aria="stageAria" aria-label="A La2eeto QR tag and an example scan page in English and Arabic">
-        <span class="demo-chip" aria-hidden="true" data-i18n="demo">Demo</span>
-        <div class="tag" aria-hidden="true">
-          <span class="hole"></span>
-          <div class="qr"><svg viewBox="-1 -1 27 27" shape-rendering="crispEdges"><rect x="-1" y="-1" width="27" height="27" fill="#fdfcf9"/><path fill="#0f2433" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM9 0h1v1h-1zM14 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM14 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM0 9h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM19 9h1v1h-1zM23 9h1v1h-1zM3 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM10 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM24 13h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM20 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM24 15h1v1h-1zM3 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM20 19h1v1h-1zM24 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM0 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM0 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1z"/></svg><span class="scan"></span></div>
-          <p>If found, scan<span lang="ar">لو لقيته، امسح الرمز</span></p>
-        </div>
-        <div class="phone" aria-hidden="true">
-          <div class="screen">
-            <div class="screen-page" data-show="true" dir="ltr" lang="en">
-              <span class="lost">Lost Mode is on</span>
-              <div class="pet"><svg><use href="#i-paw"/></svg></div>
-              <h4>Hi, I'm Luna</h4>
-              <p>My family is looking for me. Please let them know where I am.</p>
-              <span class="act primary">Message my family</span>
-              <span class="act soft">She's safe with me</span>
+    <div class="split">
+      <div class="side">
+        <h2 id="project-h" data-i18n="projH">La2eeto</h2>
+        <p data-i18n="projP">A QR tag for anything you'd hate to lose. Whoever finds it scans the tag and reaches the owner, with no app to install. Contact details stay private until the owner turns on Lost Mode.</p>
+      </div>
+      <div class="main">
+      <div class="project">
+            <div class="project-stage reveal" role="img" data-i18n-aria="stageAria" aria-label="A La2eeto QR tag and an example scan page in English and Arabic">
+              <span class="demo-chip" aria-hidden="true" data-i18n="demo">Demo</span>
+              <div class="tag" aria-hidden="true">
+                <span class="hole"></span>
+                <div class="qr"><svg viewBox="-1 -1 27 27" shape-rendering="crispEdges"><rect x="-1" y="-1" width="27" height="27" fill="#fdfcf9"/><path fill="#0f2433" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM9 0h1v1h-1zM14 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM14 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM0 9h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM19 9h1v1h-1zM23 9h1v1h-1zM3 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM10 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM24 13h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM20 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM24 15h1v1h-1zM3 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM20 19h1v1h-1zM24 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM0 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM0 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1z"/></svg><span class="scan"></span></div>
+                <p>If found, scan<span lang="ar">لو لقيته، امسح الرمز</span></p>
+              </div>
+              <div class="phone" aria-hidden="true">
+                <div class="screen">
+                  <div class="screen-page" data-show="true" dir="ltr" lang="en">
+                    <span class="lost">Lost Mode is on</span>
+                    <div class="pet"><svg><use href="#i-paw"/></svg></div>
+                    <h4>Hi, I'm Luna</h4>
+                    <p>My family is looking for me. Please let them know where I am.</p>
+                    <span class="act primary">Message my family</span>
+                    <span class="act soft">She's safe with me</span>
+                  </div>
+                  <div class="screen-page" data-show="false" dir="rtl" lang="ar">
+                    <span class="lost">وضع الفقد مفعّل</span>
+                    <div class="pet"><svg><use href="#i-paw"/></svg></div>
+                    <h4>أهلاً، أنا لونا</h4>
+                    <p>عائلتي تبحث عني. من فضلك أخبرهم أين أنا.</p>
+                    <span class="act primary">راسل عائلتي</span>
+                    <span class="act soft">إنها بأمان معي</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="screen-page" data-show="false" dir="rtl" lang="ar">
-              <span class="lost">وضع الفقد مفعّل</span>
-              <div class="pet"><svg><use href="#i-paw"/></svg></div>
-              <h4>أهلاً، أنا لونا</h4>
-              <p>عائلتي تبحث عني. من فضلك أخبرهم أين أنا.</p>
-              <span class="act primary">راسل عائلتي</span>
-              <span class="act soft">إنها بأمان معي</span>
+            <div class="project-text reveal-2">
+              <h3 data-i18n="projRole">Designed and built end to end, from product idea to production code.</h3>
+              <ul class="feats">
+                <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f1">Arabic and English, with right-to-left done properly</span></li>
+                <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f2">Installable PWA with push notifications</span></li>
+                <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f3">Privacy first: every detail starts private and the owner decides what the page shows</span></li>
+                <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f4">An accessible scan page that works on low-end phones</span></li>
+                <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f5">Its own design tokens and UI library, a web app, an API and a server-rendered scan page</span></li>
+              </ul>
+              <ul class="chips" data-i18n-aria="builtWith" aria-label="Built with"><li>React</li><li>TypeScript</li><li>Vite</li><li>TanStack Query</li><li>React Hook Form</li><li>Zod</li><li>i18next</li><li>Node.js</li><li>Web Push</li><li>Sentry</li><li>Vitest</li></ul>
+              <p class="status-line"><span class="pill"><i aria-hidden="true"></i><span data-i18n="projStatus">Live</span></span></p>
+              <a class="pill-btn solid visit" href="https://la2eeto.app" target="_blank" rel="noopener"><span><span data-i18n="visit">Open la2eeto.app</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span></span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
             </div>
           </div>
-        </div>
       </div>
-      <div class="tile project-text reveal-2">
-        <h3 data-i18n="projRole">Designed and built end to end, from product idea to production code.</h3>
-        <ul class="feats">
-          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f1">Arabic and English, with right-to-left done properly</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f2">Installable PWA with push notifications</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f3">Privacy first: every detail starts private and the owner decides what the page shows</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f4">An accessible scan page that works on low-end phones</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="f5">Its own design tokens and UI library, a web app, an API and a server-rendered scan page</span></li>
+    </div>
+  </section>
+
+
+  <section class="wrap section" id="experience" aria-labelledby="experience-h" style="padding-top:0">
+    <div class="split">
+      <div class="side">
+        <h2 id="experience-h" data-i18n="expH">Where I've worked</h2>
+        <p data-i18n="expP">From freelance sites to product teams at a Shell company, much of it remote.</p>
+      </div>
+      <div class="main">
+        <ol class="timeline-list">
+        <li class="job reveal">
+        <p class="when" data-i18n="d1">Apr 2025 – Present</p>
+        <div>
+        <h3>Sonnen GmbH</h3>
+        <p class="role" data-i18n="r1">Frontend Engineer · Shell subsidiary</p>
+        <p class="headline" data-i18n="hl1">Owns features end to end, from architecture to accessibility</p>
+        <ul class="did">
+        <li data-i18n="s1">Own production features end to end: architecture, implementation, testing and accessibility</li>
+        <li data-i18n="s2">Turn business requirements into technical designs with product and stakeholders</li>
+        <li data-i18n="s3">Build reusable component libraries and contribute to the design system</li>
+        <li data-i18n="s8">Added Sentry for observability and look after analytics and consent tooling (GTM, GA4, Usercentrics) with LaunchDarkly feature flags</li>
+        <li data-i18n="s9">Build and maintain CI/CD pipelines and automated workflows with GitHub Actions</li>
+        <li data-i18n="s10">Took the initiative to create our department's documentation hub, and implemented it</li>
+        <li data-i18n="s4">Built the user impersonation feature now used across all customer and partner apps</li>
+        <li data-i18n="s5">Made the app load noticeably faster and lifted its performance, SEO and unit-test-coverage scores</li>
+        <li data-i18n="s6">Migrated the department's web apps to AWS on my own; led the migration of the country sites to Webflow</li>
+        <li data-i18n="s7">Lead accessibility work toward WCAG AA; run code reviews and onboarding</li>
         </ul>
-        <ul class="chips" data-i18n-aria="builtWith" aria-label="Built with"><li>React</li><li>TypeScript</li><li>Vite</li><li>TanStack Query</li><li>React Hook Form</li><li>Zod</li><li>i18next</li><li>Node.js</li><li>Web Push</li><li>Sentry</li><li>Vitest</li></ul>
-        <p class="status-line"><span class="pill"><i aria-hidden="true"></i><span data-i18n="projStatus">Live</span></span></p>
-        <a class="pill-btn solid visit" href="https://la2eeto.app" target="_blank" rel="noopener"><span><span data-i18n="visit">Open la2eeto.app</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span></span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>React</li><li>TypeScript</li><li>Storybook</li><li>Tailwind CSS</li><li>Terraform</li><li>AWS</li><li>GitHub Actions</li><li>Webflow</li><li>LaunchDarkly</li><li>Sentry</li></ul>
+        </div>
+        </li>
+        <li class="job reveal">
+        <p class="when" data-i18n="d2">Oct 2024 – Mar 2025</p>
+        <div>
+        <h3>Purafi</h3>
+        <p class="role" data-i18n="r2">Frontend Developer · Remote</p>
+        <p class="headline" data-i18n="hl2">Built the React UI for the MVP</p>
+        <p class="did" data-i18n="t2">Built a responsive, scalable React UI for the MVP with backend engineers, designers and the Product Owner.</p>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>React</li><li>Responsive UI</li></ul>
+        </div>
+        </li>
+        <li class="job reveal">
+        <p class="when" data-i18n="d3">Feb 2024 – Sep 2024</p>
+        <div>
+        <h3>Inframodern</h3>
+        <p class="role" data-i18n="r3">React Native Developer · Remote</p>
+        <p class="headline" data-i18n="hl3">Built and maintained a React Native mobile app</p>
+        <p class="did" data-i18n="t3">Built and maintained a React Native mobile app with the backend team and team lead.</p>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>React Native</li></ul>
+        </div>
+        </li>
+        <li class="job reveal">
+        <p class="when" data-i18n="d4">Jul 2023 – Jan 2024</p>
+        <div>
+        <h3>Remote Web Team</h3>
+        <p class="role" data-i18n="r4">Frontend Developer</p>
+        <p class="headline" data-i18n="hl4">Shipped responsive websites for clients</p>
+        <p class="did" data-i18n="t4">Built responsive client websites with backend developers and designers.</p>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>Responsive UI</li></ul>
+        </div>
+        </li>
+        <li class="job reveal">
+        <p class="when" data-i18n="d5">Apr 2023 – Jun 2023</p>
+        <div>
+        <h3>Mahaseel Masr</h3>
+        <p class="role" data-i18n="r5">Frontend Developer Trainee</p>
+        <p class="headline" data-i18n="hl5">Built dashboards and forms with React</p>
+        <p class="did" data-i18n="t5">React and Material UI dashboards and forms with Redux Toolkit, Formik, Yup and Chart.js.</p>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>React</li><li>Material UI</li><li>Redux Toolkit</li><li>Formik</li><li>Yup</li><li>Chart.js</li></ul>
+        </div>
+        </li>
+        <li class="job reveal">
+        <p class="when" data-i18n="d6">Jan 2021 – Nov 2022</p>
+        <div>
+        <h3 data-i18n="freelance">Freelance</h3>
+        <p class="role" data-i18n="r6">Frontend Developer</p>
+        <p class="headline" data-i18n="hl6">Delivered frontend projects for clients</p>
+        <p class="did" data-i18n="t6">Delivered client projects in HTML, CSS, JavaScript, Bootstrap and React.</p>
+        <ul class="tags" data-i18n-aria="toolsLabel" aria-label="Tools"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Bootstrap</li><li>React</li></ul>
+        </div>
+        </li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <section class="wrap section" id="experience" aria-labelledby="exp-h" style="padding-top:0">
-    <div class="head">
-      <h2 id="exp-h"><span data-i18n="expH">Where I've worked</span> <span class="dim" data-i18n="expDim">since 2021.</span></h2>
-      <p class="reveal" data-i18n="expP">From freelance sites to product teams at a Shell company, much of it remote.</p>
-    </div>
-    <div class="timeline">
-      <span class="fill" aria-hidden="true"></span>
-      <ol class="timeline-list">
-        <li class="job current reveal">
-          <p class="when" data-i18n="d1">Apr 2025 – Present</p>
-          <div>
-            <h3>Sonnen GmbH</h3>
-            <p class="role" data-i18n="r1">Frontend Engineer · Shell subsidiary</p>
-            <ul class="did">
-              <li data-i18n="s1">Own features end to end: architecture, implementation, testing and accessibility</li>
-              <li data-i18n="s2">Turn business requirements into technical designs with product and stakeholders</li>
-              <li data-i18n="s3">Build reusable component libraries and contribute to the design system</li>
-              <li data-i18n="s4">Built the user impersonation feature now used across all customer and partner apps</li>
-              <li data-i18n="s5">Made the app load noticeably faster and lifted its performance, SEO and unit-test-coverage scores</li>
-              <li data-i18n="s6">Migrated the department's web apps to AWS on my own; led the migration of the country sites to Webflow</li>
-              <li data-i18n="s7">Lead accessibility work toward WCAG AA; run code reviews and onboarding</li>
-            </ul>
-          </div>
-        </li>
-        <li class="job reveal"><p class="when" data-i18n="d2">Oct 2024 – Mar 2025</p><div><h3>Purafi</h3><p class="role" data-i18n="r2">Frontend Developer · Remote</p><p class="did" data-i18n="t2">Built a responsive, scalable React UI for the MVP with backend engineers, designers and the Product Owner.</p></div></li>
-        <li class="job reveal"><p class="when" data-i18n="d3">Feb 2024 – Sep 2024</p><div><h3>Inframodern</h3><p class="role" data-i18n="r3">React Native Developer · Remote</p><p class="did" data-i18n="t3">Built and maintained a React Native mobile app with the backend team and team lead.</p></div></li>
-        <li class="job reveal"><p class="when" data-i18n="d4">Jul 2023 – Jan 2024</p><div><h3>Remote Web Team</h3><p class="role" data-i18n="r4">Frontend Developer</p><p class="did" data-i18n="t4">Built responsive client websites with backend developers and designers.</p></div></li>
-        <li class="job reveal"><p class="when" data-i18n="d5">Apr 2023 – Jun 2023</p><div><h3>Mahaseel Masr</h3><p class="role" data-i18n="r5">Frontend Developer Trainee</p><p class="did" data-i18n="t5">React and Material UI dashboards and forms with Redux Toolkit, Formik, Yup and Chart.js.</p></div></li>
-        <li class="job reveal"><p class="when" data-i18n="d6">Jan 2021 – Nov 2022</p><div><h3 data-i18n="freelance">Freelance</h3><p class="role" data-i18n="r6">Frontend Developer</p><p class="did" data-i18n="t6">Delivered client projects in HTML, CSS, JavaScript, Bootstrap and React.</p></div></li>
-      </ol>
-    </div>
-    <div class="extras">
-      <div class="tile reveal"><h3 data-i18n="eduH">Education</h3><p data-i18n="eduP">Bachelor of Business Administration, Ain Shams University (English Section), 2018–2022. Grade: Very Good.</p></div>
-      <div class="tile reveal-2"><h3 data-i18n="langH">Languages</h3><p data-i18n="langP">Arabic, native. English, professional working proficiency.</p></div>
+
+  <section class="wrap section" id="skills" aria-labelledby="skills-h" style="padding-top:0">
+    <div class="split">
+      <div class="side">
+        <h2 id="skills-h" data-i18n="skillsH">Skills</h2>
+        <p data-i18n="skillsP">What I work with, grouped by the job it does.</p>
+      </div>
+      <div class="main">
+        <div class="skill-rows">
+        <div class="skill-row reveal"><h3 data-i18n="g1">Frameworks and UI</h3><ul><li>React</li><li>React Native</li><li>Next.js</li><li>Vite</li><li>Tailwind CSS</li><li>shadcn/ui</li><li>Storybook</li><li>Recharts</li><li>Bootstrap</li><li>React Router</li><li>React Hook Form</li></ul></div>
+        <div class="skill-row reveal-2"><h3 data-i18n="g2">Languages</h3><ul><li>TypeScript</li><li>JavaScript (ES6+)</li><li>HTML5</li><li>CSS3</li></ul></div>
+        <div class="skill-row reveal"><h3 data-i18n="g3">State and data</h3><ul><li>Redux</li><li>Redux Toolkit</li><li>Zustand</li><li>TanStack Query</li><li>GraphQL</li><li>Apollo Client</li><li>Zod</li><li>JSON</li></ul></div>
+        <div class="skill-row reveal-2"><h3 data-i18n="g4">Backend and databases</h3><ul><li>Node.js</li><li>REST APIs</li><li>WebSockets</li><li>Prisma</li><li>Drizzle ORM</li></ul></div>
+        <div class="skill-row reveal"><h3 data-i18n="g5">Testing and quality</h3><ul><li>Jest</li><li>Vitest</li><li>React Testing Library</li><li>Cypress</li><li>Sentry</li><li>ESLint</li><li>Prettier</li><li>Cross-browser testing</li></ul></div>
+        <div class="skill-row reveal-2"><h3 data-i18n="g6">Cloud, DevOps and tooling</h3><ul><li>AWS S3</li><li>CloudFront</li><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>GitHub Actions</li><li>GitLab</li><li>CI/CD</li><li>Git</li><li>npm / yarn</li><li>POEditor</li></ul></div>
+        <div class="skill-row reveal"><h3 data-i18n="g7">Accessibility, SEO and web</h3><ul><li>WCAG 2.x AA</li><li>Semantic HTML</li><li>ARIA</li><li>Web performance</li><li>SEO</li><li>Responsive UI</li><li>PWA</li><li>Web Push</li><li>i18n and RTL</li></ul></div>
+        <div class="skill-row reveal-2"><h3 data-i18n="g8">Integrations and analytics</h3><ul><li>Webflow</li><li>Zapier</li><li>Salesforce</li><li>reCAPTCHA</li><li>LaunchDarkly</li><li>Google Tag Manager</li><li>GA4</li><li>Usercentrics</li><li>Meta Pixel</li><li>AJAX</li></ul></div>
+        <div class="skill-row reveal"><h3 data-i18n="g9">Practices</h3><ul><li>Frontend architecture</li><li>Component libraries</li><li>Design systems</li><li>SOLID</li><li>OOP</li><li>Data structures and algorithms</li><li>Agile</li><li>Scrum</li><li>Code review</li><li>Technical documentation</li></ul></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="wrap section" id="skills" aria-labelledby="kit-h" style="padding-top:0">
-    <div class="head">
-      <h2 id="kit-h" data-i18n="skillsH">Skills.</h2>
-      <p class="reveal" data-i18n="skillsP">What I work with, grouped by the job it does.</p>
-    </div>
-    <div class="kit">
-      <div class="tile wide reveal"><h3 data-i18n="g1">Frameworks and UI</h3><ul><li>React</li><li>React Native</li><li>Next.js</li><li>Vite</li><li>Tailwind CSS</li><li>shadcn/ui</li><li>Storybook</li><li>Recharts</li><li>Bootstrap</li><li>React Router</li><li>React Hook Form</li></ul></div>
-      <div class="tile reveal-2"><h3 data-i18n="g2">Languages</h3><ul><li>TypeScript</li><li>JavaScript (ES6+)</li><li>HTML5</li><li>CSS3</li></ul></div>
-      <div class="tile reveal"><h3 data-i18n="g3">State and data</h3><ul><li>Redux</li><li>Redux Toolkit</li><li>Zustand</li><li>TanStack Query</li><li>GraphQL</li><li>Apollo Client</li><li>Zod</li><li>JSON</li></ul></div>
-      <div class="tile reveal-2"><h3 data-i18n="g4">Backend and databases</h3><ul><li>Node.js</li><li>REST APIs</li><li>WebSockets</li><li>Prisma</li><li>Drizzle ORM</li></ul></div>
-      <div class="tile reveal"><h3 data-i18n="g5">Testing and quality</h3><ul><li>Jest</li><li>Vitest</li><li>React Testing Library</li><li>Cypress</li><li>Sentry</li><li>ESLint</li><li>Prettier</li><li>Cross-browser testing</li></ul></div>
-      <div class="tile wide reveal-2"><h3 data-i18n="g6">Cloud, DevOps and tooling</h3><ul><li>AWS S3</li><li>CloudFront</li><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>GitHub Actions</li><li>GitLab</li><li>CI/CD</li><li>Git</li><li>npm / yarn</li><li>POEditor</li></ul></div>
-      <div class="tile reveal"><h3 data-i18n="g7">Accessibility, SEO and web</h3><ul><li>WCAG 2.x AA</li><li>Semantic HTML</li><li>ARIA</li><li>Web performance</li><li>SEO</li><li>Responsive UI</li><li>PWA</li><li>Web Push</li><li>i18n and RTL</li></ul></div>
-      <div class="tile wide reveal-2"><h3 data-i18n="g8">Integrations and analytics</h3><ul><li>Webflow</li><li>Zapier</li><li>Salesforce</li><li>reCAPTCHA</li><li>LaunchDarkly</li><li>Google Tag Manager</li><li>GA4</li><li>Usercentrics</li><li>Meta Pixel</li><li>AJAX</li></ul></div>
-      <div class="tile reveal"><h3 data-i18n="g9">Practices</h3><ul><li>Frontend architecture</li><li>Component libraries</li><li>Design systems</li><li>SOLID</li><li>OOP</li><li>Data structures and algorithms</li><li>Agile</li><li>Scrum</li><li>Code review</li><li>Technical documentation</li></ul></div>
-    </div>
-  </section>
 </main>
 
 <footer class="contact" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
-    <h2 class="contact-big" id="contact-h"><a href="mailto:mohamedabdelhamid7895@gmail.com"><span class="w" data-i18n="talk">Let's talk</span><svg class="arrow flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg><span class="sr-only" data-i18n="talkSr">, send me an email</span></a></h2>
-    <div class="contact-row">
-      <p data-i18n="contactP">I'm open to frontend roles. Email is the fastest way to reach me.</p>
-      <div class="links">
-        <a class="row-link" href="Mohamed_Abdel_Hamid_CV.pdf" target="_blank" rel="noopener" download><span data-i18n="cv">Download CV</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="dl" aria-hidden="true"><use href="#i-download"/></svg></a>
-        <div><span class="email" id="email">mohamedabdelhamid7895@gmail.com</span><button class="pill-btn solid" type="button" data-copy><svg aria-hidden="true"><use href="#i-copy"/></svg><span data-i18n="ctaCopy">Copy email</span></button></div>
-        <a class="row-link" href="https://www.linkedin.com/in/mohamedabdelhamid" target="_blank" rel="noopener">LinkedIn<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
-        <a class="row-link" href="https://github.com/mohamedabdelhamid" target="_blank" rel="noopener">GitHub<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+    <div class="cta">
+      <h2 class="contact-big" id="contact-h"><a href="mailto:mohamedabdelhamid7895@gmail.com"><span class="w" data-i18n="talk">Let's talk</span><svg class="arrow flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg><span class="sr-only" data-i18n="talkSr">, send me an email</span></a></h2>
+      <div class="contact-row">
+        <p data-i18n="contactP">I'm open to frontend roles. Email is the fastest way to reach me.</p>
+        <div class="links">
+          <a class="row-link" href="Mohamed_Abdel_Hamid_CV.pdf" target="_blank" rel="noopener" download><span data-i18n="cv">Download CV</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="dl" aria-hidden="true"><use href="#i-download"/></svg></a>
+          <div><span class="email" id="email">mohamedabdelhamid7895@gmail.com</span><button class="pill-btn solid" type="button" data-copy><svg aria-hidden="true"><use href="#i-copy"/></svg><span data-i18n="ctaCopy">Copy email</span></button></div>
+          <a class="row-link" href="https://www.linkedin.com/in/mohamedabdelhamid" target="_blank" rel="noopener">LinkedIn<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+          <a class="row-link" href="https://github.com/mohamedabdelhamid" target="_blank" rel="noopener">GitHub<span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span><svg class="flip" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+        </div>
       </div>
     </div>
-    <div class="foot"><span data-i18n="foot">Mohamed Abdel Hamid · Cairo, Egypt</span><span>© 2026</span></div>
+    <div class="foot-row">
+      <p><span data-i18n="foot">Mohamed Abdel Hamid · Cairo, Egypt</span> · <time data-clock>--:--</time></p>
+      <nav data-i18n-aria="navFooter" aria-label="Footer">
+        <a href="#about" data-i18n="navAbout">About</a><a href="#work" data-i18n="navWork">Work</a><a href="#experience" data-i18n="navExp">Experience</a><a href="#skills" data-i18n="navSkills">Skills</a>
+      </nav>
+      <p><span data-i18n="thanks">Thanks for visiting.</span> © 2026</p>
+    </div>
   </div>
 </footer>
 
@@ -645,18 +776,21 @@ button { font: inherit; color: inherit; }
 (() => {
   const I18N = {
     en: {
-      cv: "Download CV", ctaTalk: "Get in touch", impactP: "Since April 2025 I've owned features end to end and improved what matters: speed, search visibility and confidence in the tests.", w1h: "Faster to load", w1p: "Cut the application's load time by a wide margin and lifted its performance score.", w2h: "Found by search", w2p: "Took the SEO score to the maximum, alongside the performance work.", w3h: "Better tested", w3p: "Raised unit test coverage, so the team ships with confidence.", w4h: "Accessible", w4p: "Leading the accessibility work toward WCAG AA: semantic HTML, ARIA and screen-reader testing.", w5h: "One tool, every customer and partner app", w5p: "Built and own the user impersonation feature used across all customer and partner apps.", w6h: "Moved to AWS, on my own", w6p: "Migrated the department's web applications to AWS single-handedly, with the infrastructure managed as code.", w7h: "Country sites on Webflow", w7p: "Led the frontend migration of the corporate sites for each country.", w8p: "I own the technical direction of what I build. I make architecture calls with product and stakeholders, review code, onboard engineers and document the decisions so the team keeps moving.", expH: "Where I've worked", s5: "Made the app load noticeably faster and lifted its performance, SEO and unit-test-coverage scores", s6: "Migrated the department's web apps to AWS on my own; led the migration of the country sites to Webflow", s7: "Lead accessibility work toward WCAG AA; run code reviews and onboarding",
+      focusH: "What I focus on", fo1: "Component libraries", fo2: "Frontend architecture", fo3: "Web performance", fo4: "Accessibility", fo5: "Design systems", c9k: "Documentation", w9h: "Our department's docs hub", w9p: "Took the initiative to create the department's documentation hub, and implemented it.", s8: "Added Sentry for observability and look after analytics and consent tooling (GTM, GA4, Usercentrics) with LaunchDarkly feature flags", s9: "Build and maintain CI/CD pipelines and automated workflows with GitHub Actions", s10: "Took the initiative to create our department's documentation hub, and implemented it",
+      aboutT: "About", aboutBody: "Frontend engineer based in Cairo. At Sonnen I own production features end to end, drive frontend architecture decisions with product, and build reusable component libraries for the design system.", lblBased: "Based in", lblNow: "Now", lblStudied: "Studied", lblLang: "Languages", valNow: "Frontend Engineer at Sonnen GmbH, a Shell subsidiary, since April 2025", valEdu: "Ain Shams University, Bachelor of Business Administration (English Section), 2018–2022",
+      navAbout: "About", navWork: "Work", status: "Frontend Engineer at Sonnen, a Shell subsidiary", cairo: "Cairo", workedWith: "Teams I've worked with", stmt: "I build interfaces that load fast, work for everyone and stay easy to maintain. I own features end to end, make *architecture calls* with product, and raise the bar through *reviews, onboarding and documentation*.", aboutP: "The practical details: where I'm based, where I studied and what I'm working on now.", wLocH: "Cairo, Egypt", wLangA: "Arabic, native", wLangE: "English, professional working proficiency", workH: "Selected work", c1k: "Performance", c2k: "Search", c3k: "Quality", c4k: "Accessibility", c5k: "Platform", c6k: "Cloud", c7k: "Migration", c8k: "Team", w8h: "Raising the team's bar", w8p: "Code reviews, onboarding for new engineers, technical documentation, and turning business requirements into technical designs with product.", hl1: "Owns features end to end, from architecture to accessibility", hl2: "Built the React UI for the MVP", hl3: "Built and maintained a React Native mobile app", hl4: "Shipped responsive websites for clients", hl5: "Built dashboards and forms with React", hl6: "Delivered frontend projects for clients", toolsLabel: "Tools", navFooter: "Footer", thanks: "Thanks for visiting.",
+      cv: "Download CV", ctaTalk: "Get in touch", impactP: "Since April 2025 I've owned features end to end and improved what matters: speed, search visibility and confidence in the tests.", w1h: "Faster to load", w1p: "Cut the application's load time by a wide margin and lifted its performance score.", w2h: "Found by search", w2p: "Took the SEO score to the maximum, alongside the performance work.", w3h: "Better tested", w3p: "Raised unit test coverage, so the team ships with confidence.", w4h: "Accessible", w4p: "Leading the accessibility work toward WCAG AA: semantic HTML, ARIA and screen-reader testing.", w5h: "One tool, every customer and partner app", w5p: "Built and own the user impersonation feature used across all customer and partner apps.", w6h: "Moved to AWS, on my own", w6p: "Migrated the department's web applications to AWS single-handedly, with the infrastructure managed as code.", w7h: "Country sites on Webflow", w7p: "Led the frontend migration of the corporate sites for each country.", expH: "Where I've worked", s5: "Made the app load noticeably faster and lifted its performance, SEO and unit-test-coverage scores", s6: "Migrated the department's web apps to AWS on my own; led the migration of the country sites to Webflow", s7: "Lead accessibility work toward WCAG AA; run code reviews and onboarding",
       skip: "Skip to content", navLabel: "Main", home: "Mohamed Abdel Hamid, back to top", first: "Mohamed",
-      navImpact: "Impact", navProject: "La2eeto", navExp: "Experience", navSkills: "Skills", navContact: "Contact",
+      navExp: "Experience", navSkills: "Skills", navContact: "Contact",
       langLabel: "Language", motion: "Pause animations", motionOn: "Play animations", menu: "Menu", 
       themeToDark: "Switch to dark theme", themeToLight: "Switch to light theme",
-      status: "Frontend Engineer at Sonnen, a Shell subsidiary · Cairo",
+      
       nameA: "Mohamed", nameB: "Abdel Hamid", name: "Mohamed Abdel Hamid",
       ledeSr: "I build fast, accessible web apps, interfaces, component libraries and mobile apps with React and TypeScript.",
       ledePre: "I build fast, accessible", ledePost: "with React and TypeScript.",
       roll: ["web apps", "interfaces", "component libraries", "mobile apps"],
-      ctaCopy: "Copy email", techLabel: "Technologies I work with",
-      impactH: "What I added", impactDim: "at Sonnen.",
+      ctaCopy: "Copy email", 
+      
       
       
       
@@ -688,8 +822,8 @@ button { font: inherit; color: inherit; }
       d4: "Jul 2023 – Jan 2024", r4: "Frontend Developer", t4: "Built responsive client websites with backend developers and designers.",
       d5: "Apr 2023 – Jun 2023", r5: "Frontend Developer Trainee", t5: "React and Material UI dashboards and forms with Redux Toolkit, Formik, Yup and Chart.js.",
       d6: "Jan 2021 – Nov 2022", freelance: "Freelance", r6: "Frontend Developer", t6: "Delivered client projects in HTML, CSS, JavaScript, Bootstrap and React.",
-      eduH: "Education", eduP: "Bachelor of Business Administration, Ain Shams University (English Section), 2018–2022. Grade: Very Good.",
-      langH: "Languages", langP: "Arabic, native. English, professional working proficiency.",
+      
+      
       skillsH: "Skills.", skillsP: "What I work with, grouped by the job it does.",
       g1: "Frameworks and UI", g2: "Languages", g3: "State and data", g4: "Backend and databases", g5: "Testing and quality", g6: "Cloud, DevOps and tooling", g7: "Accessibility, SEO and web", g8: "Integrations and analytics", g9: "Practices",
       talk: "Let's talk", talkSr: ", send me an email", contactP: "I'm open to frontend roles. Email is the fastest way to reach me.",
@@ -697,112 +831,6 @@ button { font: inherit; color: inherit; }
       
       copied: "Email copied", selected: "Email selected. Press Ctrl or Cmd + C to copy."
     },
-    ar: {
-      cv: "تحميل السيرة الذاتية", ctaTalk: "تواصل معي", impactP: "منذ أبريل 2025 أتولى الميزات من الفكرة حتى الإطلاق، وحسّنت ما يهم: السرعة، والظهور في محركات البحث، والثقة في الاختبارات.", w1h: "تحميل أسرع", w1p: "خفّضت زمن تحميل التطبيق بفارق كبير ورفعت مؤشر الأداء.", w2h: "أسهل في البحث", w2p: "وصلت بمؤشر SEO إلى أعلى درجة، إلى جانب تحسين الأداء.", w3h: "اختبارات أقوى", w3p: "رفعت تغطية اختبارات الوحدات ليسلّم الفريق عمله بثقة.", w4h: "متاح للجميع", w4p: "أقود العمل على إتاحة الوصول وفق WCAG AA: HTML دلالي وARIA واختبار بقارئ الشاشة.", w5h: "أداة واحدة لكل تطبيقات العملاء والشركاء", w5p: "بنيت وأتولى ميزة الدخول بصفة مستخدم التي تُستخدم في كل تطبيقات العملاء والشركاء.", w6h: "النقل إلى AWS بمفردي", w6p: "نقلت تطبيقات الويب في القسم إلى AWS بمفردي، مع إدارة البنية التحتية كشيفرة.", w7h: "مواقع الدول على Webflow", w7p: "قُدت نقل الواجهات الأمامية لمواقع الشركة في كل دولة.", w8p: "أتولى الاتجاه التقني لما أبنيه: أتخذ قرارات البنية مع فريق المنتج وأصحاب المصلحة، وأراجع الشيفرة، وأدرّب المهندسين الجدد، وأوثّق القرارات ليواصل الفريق العمل بسلاسة.", expH: "أين عملت", s5: "جعلت التطبيق أسرع في التحميل بشكل ملحوظ ورفعت مؤشرات الأداء وSEO وتغطية الاختبارات", s6: "نقلت تطبيقات الويب في القسم إلى AWS بمفردي، وقُدت نقل مواقع الدول إلى Webflow", s7: "أقود العمل على إتاحة الوصول وفق WCAG AA، وأراجع الشيفرة وأدرّب المهندسين الجدد",
-      skip: "انتقل إلى المحتوى", navLabel: "القائمة الرئيسية", home: "محمد عبد الحميد، العودة إلى الأعلى", first: "محمد",
-      navImpact: "الإنجازات", navProject: "لاقيته", navExp: "الخبرة", navSkills: "المهارات", navContact: "تواصل",
-      langLabel: "اللغة", motion: "إيقاف الحركة", motionOn: "تشغيل الحركة", menu: "القائمة", 
-      themeToDark: "التبديل إلى الوضع الداكن", themeToLight: "التبديل إلى الوضع الفاتح",
-      status: "مهندس واجهات أمامية في Sonnen، إحدى شركات Shell · القاهرة",
-      nameA: "محمد", nameB: "عبد الحميد", name: "محمد عبد الحميد",
-      ledeSr: "أبني تطبيقات ويب وواجهات ومكتبات مكوّنات وتطبيقات جوال سريعة ومتاحة للجميع باستخدام React وTypeScript.",
-      ledePre: "أبني", ledePost: "سريعة ومتاحة للجميع باستخدام React وTypeScript.",
-      roll: ["تطبيقات ويب", "واجهات", "مكتبات مكوّنات", "تطبيقات جوال"],
-      ctaCopy: "انسخ البريد", techLabel: "التقنيات التي أعمل بها",
-      impactH: "ما أضفته", impactDim: "في Sonnen.",
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      projH: "لاقيته", projDim: "مشروعي الجانبي.",
-      projP: "ملصق QR لأي شيء تخاف أن تفقده. من يجده يمسح الرمز ويصل إلى صاحبه دون تثبيت أي تطبيق، وتبقى بيانات التواصل خاصة حتى يفعّل المالك وضع الفقد.",
-      stageAria: "ملصق QR من لاقيته وصفحة مسح تجريبية بالإنجليزية والعربية", demo: "عرض تجريبي",
-      projRole: "صممته وبنيته بالكامل، من فكرة المنتج حتى شيفرة الإنتاج.",
-      f1: "العربية والإنجليزية، مع دعم صحيح للكتابة من اليمين إلى اليسار", f2: "تطبيق ويب قابل للتثبيت (PWA) مع إشعارات",
-      f3: "الخصوصية أولاً: كل البيانات خاصة من البداية والمالك يقرر ما يظهر في الصفحة", f4: "صفحة مسح متاحة للجميع وتعمل على الهواتف البسيطة",
-      f5: "رموز تصميم ومكتبة واجهات خاصة به، وتطبيق ويب، وواجهة API، وصفحة مسح تُعرض من الخادم", builtWith: "بُني باستخدام", projStatus: "متاح الآن", visit: "افتح la2eeto.app",
-      expDim: "منذ 2021.", expP: "من مواقع العمل الحر إلى فرق المنتجات في إحدى شركات Shell، وكثير منها عن بُعد.",
-      d1: "أبريل 2025 – الآن", r1: "مهندس واجهات أمامية · إحدى شركات Shell",
-      s1: "أتولى الميزات من البداية للنهاية: البنية، والتنفيذ، والاختبار، وإتاحة الوصول",
-      s2: "أحوّل متطلبات العمل إلى تصميمات تقنية مع فريق المنتج وأصحاب المصلحة",
-      s3: "أبني مكتبات مكوّنات قابلة لإعادة الاستخدام وأساهم في نظام التصميم",
-      s4: "بنيت ميزة الدخول بصفة مستخدم التي تستخدمها الآن كل تطبيقات العملاء والشركاء",
-      
-      
-      
-      d2: "أكتوبر 2024 – مارس 2025", r2: "مطوّر واجهات أمامية · عن بُعد", t2: "بنيت واجهة React متجاوبة وقابلة للتوسع للنسخة الأولى من المنتج مع مهندسي الخلفية والمصممين ومالك المنتج.",
-      d3: "فبراير 2024 – سبتمبر 2024", r3: "مطوّر React Native · عن بُعد", t3: "بنيت تطبيق جوال بـ React Native وطوّرته مع فريق الخلفية وقائد الفريق.",
-      d4: "يوليو 2023 – يناير 2024", r4: "مطوّر واجهات أمامية", t4: "بنيت مواقع متجاوبة للعملاء مع مطوّري الخلفية والمصممين.",
-      d5: "أبريل 2023 – يونيو 2023", r5: "متدرب تطوير واجهات أمامية", t5: "لوحات تحكم ونماذج بـ React وMaterial UI مع Redux Toolkit وFormik وYup وChart.js.",
-      d6: "يناير 2021 – نوفمبر 2022", freelance: "عمل حر", r6: "مطوّر واجهات أمامية", t6: "نفّذت مشاريع للعملاء باستخدام HTML وCSS وJavaScript وBootstrap وReact.",
-      eduH: "التعليم", eduP: "بكالوريوس إدارة الأعمال، جامعة عين شمس (القسم الإنجليزي)، 2018–2022. التقدير: جيد جداً.",
-      langH: "اللغات", langP: "العربية: اللغة الأم. الإنجليزية: مستوى مهني.",
-      skillsH: "المهارات.", skillsP: "الأدوات التي أعمل بها، مجمّعة حسب الغرض.",
-      g1: "أطر العمل والواجهات", g2: "لغات البرمجة", g3: "إدارة الحالة والبيانات", g4: "الخلفية وقواعد البيانات", g5: "الاختبار والجودة", g6: "السحابة وDevOps والأدوات", g7: "إتاحة الوصول وSEO والويب", g8: "التكاملات والتحليلات", g9: "الممارسات",
-      talk: "لنتحدث", talkSr: "، أرسل لي بريداً إلكترونياً", contactP: "أنا متاح لوظائف الواجهات الأمامية. البريد الإلكتروني أسرع طريقة للتواصل معي.",
-      newTab: " (يفتح في علامة تبويب جديدة)", foot: "محمد عبد الحميد · القاهرة، مصر",
-      
-      copied: "تم نسخ البريد الإلكتروني", selected: "تم تحديد البريد. اضغط Ctrl أو Cmd + C للنسخ."
-    },
-    de: {
-      cv: "Lebenslauf herunterladen", ctaTalk: "Kontakt aufnehmen", impactP: "Seit April 2025 verantworte ich Features von Anfang bis Ende und verbessere, was zählt: Geschwindigkeit, Sichtbarkeit in Suchmaschinen und Vertrauen in die Tests.", w1h: "Schneller geladen", w1p: "Die Ladezeit der Anwendung deutlich gesenkt und den Performance-Score verbessert.", w2h: "Besser gefunden", w2p: "Den SEO-Score auf das Maximum gebracht, zusammen mit der Performance-Arbeit.", w3h: "Besser getestet", w3p: "Die Unit-Test-Abdeckung erhöht, damit das Team mit Vertrauen ausliefert.", w4h: "Barrierefrei", w4p: "Ich leite die Barrierefreiheit Richtung WCAG AA: semantisches HTML, ARIA und Screenreader-Tests.", w5h: "Ein Tool, alle Kunden- und Partner-Apps", w5p: "Die Impersonation-Funktion gebaut und verantwortet, die in allen Kunden- und Partner-Apps genutzt wird.", w6h: "Im Alleingang zu AWS", w6p: "Die Web-Anwendungen der Abteilung im Alleingang zu AWS migriert, mit Infrastruktur als Code.", w7h: "Länderseiten auf Webflow", w7p: "Die Frontend-Migration der Unternehmensseiten für jedes Land geleitet.", w8p: "Ich verantworte die technische Richtung dessen, was ich baue: Architekturentscheidungen mit Produkt und Stakeholdern, Code-Reviews, Onboarding neuer Engineers und dokumentierte Entscheidungen, damit das Team zügig weiterarbeitet.", expH: "Wo ich gearbeitet habe", s5: "App spürbar schneller geladen und Performance-, SEO- und Testabdeckungs-Werte verbessert", s6: "Die Web-Apps der Abteilung im Alleingang zu AWS migriert; die Migration der Länderseiten zu Webflow geleitet", s7: "Leite die Barrierefreiheit Richtung WCAG AA; führe Code-Reviews und Onboarding durch",
-      skip: "Zum Inhalt springen", navLabel: "Hauptnavigation", home: "Mohamed Abdel Hamid, zurück nach oben", first: "Mohamed",
-      navImpact: "Ergebnisse", navProject: "La2eeto", navExp: "Erfahrung", navSkills: "Skills", navContact: "Kontakt",
-      langLabel: "Sprache", motion: "Animationen pausieren", motionOn: "Animationen abspielen", menu: "Menü", 
-      themeToDark: "Zum dunklen Design wechseln", themeToLight: "Zum hellen Design wechseln",
-      status: "Frontend Engineer bei Sonnen, einem Shell-Tochterunternehmen · Kairo",
-      nameA: "Mohamed", nameB: "Abdel Hamid", name: "Mohamed Abdel Hamid",
-      ledeSr: "Ich baue schnelle, barrierefreie Web-Apps, Oberflächen, UI-Bibliotheken und mobile Apps mit React und TypeScript.",
-      ledePre: "Ich baue schnelle, barrierefreie", ledePost: "mit React und TypeScript.",
-      roll: ["Web-Apps", "Oberflächen", "UI-Bibliotheken", "mobile Apps"],
-      ctaCopy: "E-Mail kopieren", techLabel: "Technologien, mit denen ich arbeite",
-      impactH: "Was ich beitrage", impactDim: "bei Sonnen.",
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      projH: "La2eeto", projDim: "mein Nebenprojekt.",
-      projP: "Ein QR-Anhänger für alles, was du nicht verlieren willst. Wer etwas findet, scannt den Anhänger und erreicht den Besitzer, ganz ohne App. Kontaktdaten bleiben privat, bis der Besitzer den Verloren-Modus einschaltet.",
-      stageAria: "Ein La2eeto-QR-Anhänger und eine Beispiel-Scanseite auf Englisch und Arabisch", demo: "Demo",
-      projRole: "Von der Produktidee bis zum Produktionscode selbst entworfen und gebaut.",
-      f1: "Arabisch und Englisch, mit sauberer Rechts-nach-links-Unterstützung", f2: "Installierbare PWA mit Push-Benachrichtigungen",
-      f3: "Privatsphäre zuerst: Alles startet privat, und der Besitzer entscheidet, was die Seite zeigt", f4: "Eine barrierefreie Scanseite, die auch auf einfachen Smartphones läuft",
-      f5: "Eigene Design-Tokens und UI-Bibliothek, eine Web-App, eine API und eine serverseitig gerenderte Scanseite", builtWith: "Gebaut mit", projStatus: "Live", visit: "la2eeto.app öffnen",
-      expDim: "seit 2021.", expP: "Von Freelance-Websites bis zu Produktteams bei einem Shell-Unternehmen, vieles davon remote.",
-      d1: "Apr. 2025 – heute", r1: "Frontend Engineer · Shell-Tochterunternehmen",
-      s1: "Verantworte Features von Anfang bis Ende: Architektur, Umsetzung, Tests und Barrierefreiheit",
-      s2: "Übersetze Geschäftsanforderungen mit Produkt und Stakeholdern in technische Konzepte",
-      s3: "Baue wiederverwendbare Komponentenbibliotheken und arbeite am Designsystem mit",
-      s4: "Habe die Impersonation-Funktion gebaut, die heute alle Kunden- und Partner-Apps nutzen",
-      
-      
-      
-      d2: "Okt. 2024 – März 2025", r2: "Frontend Developer · Remote", t2: "Responsives, skalierbares React-UI für das MVP gebaut, gemeinsam mit Backend, Design und Product Owner.",
-      d3: "Feb. 2024 – Sept. 2024", r3: "React Native Developer · Remote", t3: "Eine React-Native-App mit dem Backend-Team und dem Teamlead gebaut und gepflegt.",
-      d4: "Juli 2023 – Jan. 2024", r4: "Frontend Developer", t4: "Responsive Kundenwebsites mit Backend-Entwicklern und Designern gebaut.",
-      d5: "Apr. 2023 – Juni 2023", r5: "Frontend Developer Trainee", t5: "Dashboards und Formulare mit React und Material UI, Redux Toolkit, Formik, Yup und Chart.js.",
-      d6: "Jan. 2021 – Nov. 2022", freelance: "Freelance", r6: "Frontend Developer", t6: "Kundenprojekte mit HTML, CSS, JavaScript, Bootstrap und React umgesetzt.",
-      eduH: "Ausbildung", eduP: "Bachelor in Betriebswirtschaft, Ain-Shams-Universität (englischsprachiger Studiengang), 2018–2022. Note: Sehr gut.",
-      langH: "Sprachen", langP: "Arabisch: Muttersprache. Englisch: verhandlungssicher im Berufsalltag.",
-      skillsH: "Skills.", skillsP: "Womit ich arbeite, nach Aufgabe gruppiert.",
-      g1: "Frameworks und UI", g2: "Sprachen", g3: "State und Daten", g4: "Backend und Datenbanken", g5: "Tests und Qualität", g6: "Cloud, DevOps und Tools", g7: "Barrierefreiheit, SEO und Web", g8: "Integrationen und Analytics", g9: "Arbeitsweisen",
-      talk: "Lass uns reden", talkSr: ", schreib mir eine E-Mail", contactP: "Ich bin offen für Frontend-Rollen. Per E-Mail erreichst du mich am schnellsten.",
-      newTab: " (öffnet in neuem Tab)", foot: "Mohamed Abdel Hamid · Kairo, Ägypten",
-      
-      copied: "E-Mail kopiert", selected: "E-Mail markiert. Mit Strg oder Cmd + C kopieren."
-    }
   };
 
   const root = document.documentElement;
@@ -820,7 +848,7 @@ button { font: inherit; color: inherit; }
   /* ---------- Hero dot field ---------- */
   const cv = document.getElementById("field"), ctx = cv.getContext("2d");
   let W = 0, H = 0, dots = [], mx = -9999, my = -9999, running = false, heroVisible = true;
-  let dotRGB = "70,76,91", hotRGB = "214,140,0";
+  let dotRGB = "67,73,87", hotRGB = "43,91,255";
   const t0 = performance.now();
   function readDotColors() {
     const cs = getComputedStyle(root);
@@ -930,13 +958,11 @@ button { font: inherit; color: inherit; }
       root.lang = next; root.dir = next === "ar" ? "rtl" : "ltr";
       document.querySelectorAll("[data-i18n]").forEach(el => { const v = T[el.dataset.i18n]; if (typeof v === "string") el.textContent = v; });
       document.querySelectorAll("[data-i18n-aria]").forEach(el => { const v = T[el.dataset.i18nAria]; if (typeof v === "string") el.setAttribute("aria-label", v); });
-      document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
-      renderName(); renderRoller(); syncTheme(); syncMotion();
+      renderName(); renderRoller(); renderStatement(); syncTheme(); syncMotion();
       store.set("ma-lang", next);
     };
     if (animate && document.startViewTransition && !still()) document.startViewTransition(doIt); else doIt();
   }
-  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang, true)));
 
   /* Rolling word */
   setInterval(() => {
@@ -947,15 +973,33 @@ button { font: inherit; color: inherit; }
     nx.dataset.state = "now";
   }, 2600);
 
-  /* ---------- Marquee ---------- */
-  const row1 = ["React", "TypeScript", "Next.js", "React Native", "Tailwind CSS", "Storybook", "Vitest", "Cypress", "TanStack Query", "Zustand"];
-  const row2 = ["Node.js", "Terraform", "AWS", "Docker", "Kubernetes", "GitHub Actions", "Sentry", "PWA"];
-  const fill = (el, items) => {
-    const g = items.map((t, i) => `<span class="chip${i % 3 === 0 ? " hl" : ""}"><b></b>${t}</span>`).join("");
-    el.innerHTML = `<div class="marquee-group">${g}</div><div class="marquee-group">${g}</div>`;
-  };
-  fill(document.getElementById("mq1"), row1);
-  fill(document.getElementById("mq2"), row2);
+  /* ---------- Statement: words fill in on scroll ---------- */
+  const stmt = document.getElementById("statement");
+  function renderStatement() {
+    const parts = T.stmt.split(/(\s+)/);
+    const total = parts.filter(x => x.trim()).length;
+    let hl = false, n = 0;
+    stmt.textContent = "";
+    parts.forEach(x => {
+      if (!x.trim()) { stmt.appendChild(document.createTextNode(x)); return; }
+      const opens = x.startsWith("*"), closes = /.\*/.test(x);
+      if (opens) hl = true;
+      const w = document.createElement("span");
+      w.className = "wd" + (hl ? " hl" : "");
+      w.style.setProperty("--k", (n++ / Math.max(1, total - 1)).toFixed(3));
+      w.textContent = x.replace(/\*/g, "");
+      stmt.appendChild(w);
+      if (closes) hl = false;
+    });
+  }
+
+  /* ---------- Cairo clock ---------- */
+  function tick() {
+    let t = "--:--";
+    try { t = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()); } catch (e) {}
+    document.querySelectorAll("[data-clock]").forEach(el => (el.textContent = t));
+  }
+  tick(); setInterval(tick, 15000);
 
   /* ---------- Nav ---------- */
   const navBar = document.getElementById("navBar");
